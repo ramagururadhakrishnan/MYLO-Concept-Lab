@@ -7,6 +7,9 @@
 <meta name="description" content="MYLO — L1 Concept Lab: interactive lessons across NLP, Machine Learning, and Networks fundamentals.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -63,6 +66,12 @@
       <h2 class="mod-title">Levenshtein (Edit) Distance</h2>
       <div class="mod-desc">The minimum number of single-character insertions, deletions, or substitutions needed to turn one word into another. Used for spell-checkers, fuzzy matching, and DNA sequence comparison.</div>
 
+      <div class="math-box">
+        <div class="math-title">The recurrence</div>
+        <div class="math-row">$$D(i,j)=\begin{cases}\max(i,j) & \text{if } \min(i,j)=0\\[4pt]\min\begin{cases}D(i-1,j)+1 & \text{(delete)}\\D(i,j-1)+1 & \text{(insert)}\\D(i-1,j-1)+\mathbb{1}_{a_i\neq b_j} & \text{(match/substitute)}\end{cases} & \text{otherwise}\end{cases}$$</div>
+        <div class="math-note">$D(i,j)$ is the edit distance between the first $i$ characters of the source and the first $j$ characters of the target — exactly the value in cell $(i,j)$ of the grid on the right.</div>
+      </div>
+
       <div class="field-row">
         <div class="field">
           <label for="wordA">Source word</label>
@@ -109,6 +118,12 @@
       <h2 class="mod-title">Type-Token Ratio (TTR)</h2>
       <div class="mod-desc">A quick measure of lexical diversity. A <b>token</b> is any word occurrence; a <b>type</b> is a distinct word. A high ratio means little repetition, a low ratio means the text leans on the same words often.</div>
 
+      <div class="math-box">
+        <div class="math-title">The formula</div>
+        <div class="math-row">$$TTR=\dfrac{|V|}{N}$$</div>
+        <div class="math-note">$|V|$ is the number of unique word types, $N$ is the total token count. $TTR\in[0,1]$ — closer to 1 means almost every word is different; closer to 0 means heavy repetition.</div>
+      </div>
+
       <div class="field-row" style="align-items:flex-start;">
         <div class="field" style="flex:1 1 100%;">
           <label for="ttrText">Sample text</label>
@@ -135,6 +150,14 @@
     <section class="module" id="mod-linreg">
       <h2 class="mod-title">Linear Regression + Gradient Descent</h2>
       <div class="mod-desc">Gradient descent nudges the slope <b>m</b> and intercept <b>b</b> downhill on the loss surface until the fitted line stops improving. The right panel <i>is</i> that loss surface — teal is low loss, red is high — with the descent path traced across it.</div>
+
+      <div class="math-box">
+        <div class="math-title">Model, loss, and the update rule</div>
+        <div class="math-row">$$\hat y = mx+b \qquad\qquad L(m,b)=\dfrac{1}{n}\sum_{i=1}^{n}\left(mx_i+b-y_i\right)^2$$</div>
+        <div class="math-row">$$m \leftarrow m-\alpha\,\dfrac{\partial L}{\partial m}, \qquad b \leftarrow b-\alpha\,\dfrac{\partial L}{\partial b}$$</div>
+        <div class="math-row">$$\dfrac{\partial L}{\partial m}=\dfrac{2}{n}\sum_i (mx_i+b-y_i)\,x_i \qquad\qquad \dfrac{\partial L}{\partial b}=\dfrac{2}{n}\sum_i (mx_i+b-y_i)$$</div>
+        <div class="math-note">$\alpha$ is the learning rate slider. Each "Step" click computes both partial derivatives across every data point and moves $(m,b)$ one increment down-slope — that's the ink dot moving across the heatmap.</div>
+      </div>
 
       <div class="control-strip">
         <div class="btn-group">
@@ -178,6 +201,13 @@
       <h2 class="mod-title">Overfitting vs. Underfitting</h2>
       <div class="mod-desc">A polynomial of degree <b>d</b> is fit to the teal training points. Push the degree up and the curve bends to chase every point — including noise — while error on the held-out red test points stops improving or gets worse.</div>
 
+      <div class="math-box">
+        <div class="math-title">Model and the bias-variance tradeoff</div>
+        <div class="math-row">$$\hat y=\sum_{k=0}^{d} w_k x^k \qquad\qquad \text{MSE}=\dfrac{1}{n}\sum_{i=1}^n(\hat y_i-y_i)^2$$</div>
+        <div class="math-row">$$\text{Expected Test Error} = \underbrace{\text{Bias}^2}_{\text{low }d} + \underbrace{\text{Variance}}_{\text{high }d} + \text{Irreducible Error}$$</div>
+        <div class="math-note">Low $d$ underfits (high bias, the curve is too rigid to capture the pattern). High $d$ overfits (high variance, the curve chases noise and swings wildly for small data changes). The sweet spot minimizes total test error.</div>
+      </div>
+
       <div class="control-strip">
         <div class="slider-field">
           <div class="slider-head"><span>Polynomial degree</span><b id="ofDegreeVal">3</b></div>
@@ -211,6 +241,12 @@
       <h2 class="mod-title">k-Nearest Neighbors</h2>
       <div class="mod-desc">Click anywhere on the plot to drop a query point. It's classified by a majority vote among its <b>k</b> closest neighbors — the shaded background shows how that vote would go for every possible location.</div>
 
+      <div class="math-box">
+        <div class="math-title">Distance and the vote</div>
+        <div class="math-row">$$d(x,x_i)=\sqrt{\sum_{j=1}^{p}\left(x_j-x_{i,j}\right)^2} \qquad\qquad \hat y=\text{mode}\left\{\,y_{(1)},\,y_{(2)},\,\dots,\,y_{(k)}\,\right\}$$</div>
+        <div class="math-note">$d$ is ordinary Euclidean distance in 2D here. The $k$ closest points by that distance cast one vote each for their class; the majority class becomes the prediction.</div>
+      </div>
+
       <div class="control-strip">
         <div class="slider-field">
           <div class="slider-head"><span>k</span><b id="knnKVal">5</b></div>
@@ -241,6 +277,13 @@
     <section class="module" id="mod-kmeans">
       <h2 class="mod-title">k-Means Clustering</h2>
       <div class="mod-desc">k-Means alternates two steps: <b>assign</b> every point to its nearest centroid (&times;), then <b>update</b> each centroid to the mean of its assigned points. Step through it manually or run it to convergence.</div>
+
+      <div class="math-box">
+        <div class="math-title">Objective and the two steps</div>
+        <div class="math-row">$$J=\sum_{i=1}^{k}\sum_{x\in C_i}\lVert x-\mu_i\rVert^2$$</div>
+        <div class="math-row">$$\text{Assign: } c(x)=\underset{i}{\arg\min}\;\lVert x-\mu_i\rVert^2 \qquad\qquad \text{Update: } \mu_i=\dfrac{1}{|C_i|}\sum_{x\in C_i}x$$</div>
+        <div class="math-note">$J$ is the inertia charted on the right — total squared distance from every point to its own centroid. Each full assign/update cycle can only decrease or hold $J$, which is why it's guaranteed to converge.</div>
+      </div>
 
       <div class="control-strip">
         <div class="slider-field">
@@ -277,6 +320,13 @@
     <section class="module" id="mod-decision">
       <h2 class="mod-title">Decision Boundary (Logistic Regression)</h2>
       <div class="mod-desc">Logistic regression learns a straight boundary that separates the two classes by minimizing cross-entropy loss with gradient descent. Misclassified points are ringed; the shaded background is the model's predicted class at every location.</div>
+
+      <div class="math-box">
+        <div class="math-title">Model and loss</div>
+        <div class="math-row">$$\sigma(z)=\dfrac{1}{1+e^{-z}} \qquad\qquad \hat p=\sigma\!\left(w_1x_1+w_2x_2+b\right)$$</div>
+        <div class="math-row">$$L=-\dfrac{1}{n}\sum_{i=1}^n\left[y_i\log\hat p_i+(1-y_i)\log(1-\hat p_i)\right]$$</div>
+        <div class="math-note">The boundary drawn is where $\hat p=0.5$, i.e. $w_1x_1+w_2x_2+b=0$ — a straight line because the model is linear in $x_1,x_2$ even though $\sigma$ itself is curved.</div>
+      </div>
 
       <div class="control-strip">
         <div class="btn-group">
@@ -316,6 +366,12 @@
     <section class="module" id="mod-confusion">
       <h2 class="mod-title">Confusion Matrix, Precision, Recall, F1</h2>
       <div class="mod-desc">Each dot is an example scored by a classifier (0–1) with a true class. Sliding the decision threshold changes which dots count as "predicted positive" — watch precision, recall, and F1 trade off as the threshold moves.</div>
+
+      <div class="math-box">
+        <div class="math-title">The four metrics</div>
+        <div class="math-row">$$Precision=\dfrac{TP}{TP+FP} \qquad Recall=\dfrac{TP}{TP+FN} \qquad F_1=\dfrac{2\cdot P\cdot R}{P+R} \qquad Accuracy=\dfrac{TP+TN}{TP+TN+FP+FN}$$</div>
+        <div class="math-note">Raising the threshold shrinks the "predicted positive" region — FP tends to fall (precision rises) but FN tends to rise (recall falls). $F_1$ is the harmonic mean of precision and recall, so it drops sharply if either one is low.</div>
+      </div>
 
       <div class="control-strip">
         <div class="slider-field">
@@ -359,7 +415,6 @@
             <div class="stat ratio"><div class="n" id="statF1">0.00</div><div class="l">F1 score</div></div>
             <div class="stat"><div class="n" id="statAccuracy">0%</div><div class="l">accuracy</div></div>
           </div>
-          <div class="formula">Precision = TP&divide;(TP+FP) &nbsp;&middot;&nbsp; Recall = TP&divide;(TP+FN) &nbsp;&middot;&nbsp; F1 = 2&middot;P&middot;R&divide;(P+R)</div>
         </div>
       </div>
     </section>
@@ -368,6 +423,12 @@
     <section class="module" id="mod-ipaddr">
       <h2 class="mod-title">IP Addressing</h2>
       <div class="mod-desc">An IPv4 address is 32 bits, written as four 8-bit octets. Click any bit below to flip it and watch the decimal address, class, and address type update live.</div>
+
+      <div class="math-box">
+        <div class="math-title">Octet to decimal</div>
+        <div class="math-row">$$\text{octet} = \sum_{i=0}^{7} b_i \cdot 2^{i} \qquad (b_7\,b_6\,b_5\,b_4\,b_3\,b_2\,b_1\,b_0)$$</div>
+        <div class="math-note">Each of the 8 bit toggles above is worth $2^7=128$ down to $2^0=1$, left to right — hover a bit to see its value.</div>
+      </div>
 
       <div class="ip-input-row">
         <div class="field">
@@ -391,6 +452,13 @@
     <section class="module" id="mod-subnet">
       <h2 class="mod-title">Subnetting</h2>
       <div class="mod-desc">A CIDR prefix (e.g. <code>/24</code>) says how many of the 32 bits are "network" bits (teal) versus "host" bits (red). Drag the slider to see the subnet mask, network address, broadcast address, and usable host range recompute live.</div>
+
+      <div class="math-box">
+        <div class="math-title">Key formulas</div>
+        <div class="math-row">$$\text{Network} = IP \;\&\; \text{Mask} \qquad\qquad \text{Broadcast} = \text{Network} \;|\; \overline{\text{Mask}}$$</div>
+        <div class="math-row">$$\text{Usable hosts} = 2^{(32-\text{prefix})}-2$$</div>
+        <div class="math-note">$\&$ is bitwise AND, $|$ is bitwise OR, and $\overline{\text{Mask}}$ (the wildcard mask) flips every bit of the mask. The $-2$ excludes the network and broadcast addresses themselves — except at $/31$ and $/32$, which have their own special-case rules (used for point-to-point links and single hosts).</div>
+      </div>
 
       <div class="ip-input-row">
         <div class="field">

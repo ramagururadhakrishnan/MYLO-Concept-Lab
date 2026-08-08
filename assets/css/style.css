@@ -598,6 +598,34 @@ input[type=range]::-moz-range-track{
   margin-top:14px;
 }
 
+/* ---- Math / formula boxes (KaTeX) ---- */
+.math-box{
+  background:var(--paper);
+  border:1px solid var(--rule);
+  border-left:4px solid var(--teal);
+  padding:14px 18px;
+  margin:18px 0;
+}
+.math-box .math-title{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10.5px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--ink-soft);
+  margin-bottom:10px;
+}
+.math-box .math-row{
+  margin:8px 0;
+  overflow-x:auto;
+}
+.math-box .math-note{
+  font-size:12px;
+  color:var(--ink-soft);
+  margin-top:8px;
+  line-height:1.55;
+}
+.math-box .katex{font-size:1.05em;}
+
 /* confusion matrix grid */
 .cm-layout{
   display:grid;

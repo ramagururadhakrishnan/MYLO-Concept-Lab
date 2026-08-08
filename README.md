@@ -29,10 +29,14 @@ groups get added.
 
 Every module shares one visual language (a "field notebook" theme with
 red-pen edit marks, teal/red for correct/incorrect or class A/B) so new
-concepts feel like part of the same lab rather than bolted on.
-`assets/js/canvas-utils.js` holds shared canvas helpers (coordinate scaling,
-color interpolation, a seeded RNG) used by the ML modules; `assets/js/network-utils.js`
-holds shared IP/binary math used by the Networks modules.
+concepts feel like part of the same lab rather than bolted on. Each module
+also includes a "math-box" panel with the underlying formulas, typeset with
+[KaTeX](https://katex.org) (loaded from a CDN, so an internet connection is
+needed for the math to render — the raw LaTeX source still shows if it
+can't load). `assets/js/canvas-utils.js` holds shared canvas helpers
+(coordinate scaling, color interpolation, a seeded RNG) used by the ML
+modules; `assets/js/network-utils.js` holds shared IP/binary math used by
+the Networks modules.
 
 ## Running it locally
 
@@ -106,6 +110,22 @@ The lab is built so a new concept is additive, not a rewrite:
 3. **Logic** — add `assets/js/yourconcept.js` with an `initYourConceptModule()` function that wires up inputs and renders results into your section. Keep it self-contained like `ttr.js` or `ipaddress.js`.
 4. **Wire it up** — add `<script defer src="assets/js/yourconcept.js"></script>` in `index.html`, and call `initYourConceptModule()` from the guarded block at the bottom of `main.js` so it boots with a sensible default state.
 5. **Style** — reuse the existing design tokens (CSS variables at the top of `style.css`: `--paper`, `--ink`, `--red`, `--teal`, etc.) rather than introducing new colors, so new modules — and new groups — stay visually consistent with the rest of the lab.
+6. **Math (optional)** — add a `<div class="math-box">` with a `<div class="math-title">`, one or more `<div class="math-row">$$...$$</div>` blocks (LaTeX, KaTeX-flavored), and an optional `<div class="math-note">`. It renders automatically — `main.js` calls `renderMathInElement` once on page load across the whole document, including hidden tabs.
+
+## Troubleshooting GitHub Pages
+
+**Everything shows up unstyled (default browser buttons, no layout, no
+fonts)** — this means `assets/css/style.css` is 404ing even though
+`index.html` loaded. Check the browser DevTools Network tab for the exact
+failing URL. The usual cause is a folder-casing mismatch or an extra nested
+folder introduced by uploading files one-by-one through the GitHub web UI
+(GitHub Pages' filesystem is case-sensitive, unlike most local dev setups).
+The reliable fix is pushing via `git` instead of the web upload UI, since
+`git` preserves the exact folder structure and dotfiles like `.nojekyll`.
+
+**Site 404s entirely** — `index.html` isn't sitting directly at the
+configured Pages root; check for a nested folder in the repo's file listing
+on github.com.
 
 Good next candidates: n-gram overlap, cosine similarity, TF-IDF (NLP); a tiny
 bigram language model (NLP/ML); routing tables, DNS resolution, or the
