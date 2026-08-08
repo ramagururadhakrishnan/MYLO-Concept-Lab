@@ -7,9 +7,6 @@
 <meta name="description" content="MYLO — L1 Concept Lab: interactive lessons across NLP, Machine Learning, and Networks fundamentals.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -55,6 +52,13 @@
         </div>
       </div>
 
+      <div class="nav-group" data-group="datascience">
+        <button class="group-toggle">Data Science <span class="chev">&#9662;</span></button>
+        <div class="group-items">
+          <button class="side-tab" data-tab="eda">Exploratory Data Analysis</button>
+        </div>
+      </div>
+
     </nav>
   </aside>
 
@@ -68,8 +72,15 @@
 
       <div class="math-box">
         <div class="math-title">The recurrence</div>
-        <div class="math-row">$$D(i,j)=\begin{cases}\max(i,j) & \text{if } \min(i,j)=0\\[4pt]\min\begin{cases}D(i-1,j)+1 & \text{(delete)}\\D(i,j-1)+1 & \text{(insert)}\\D(i-1,j-1)+\mathbb{1}_{a_i\neq b_j} & \text{(match/substitute)}\end{cases} & \text{otherwise}\end{cases}$$</div>
-        <div class="math-note">$D(i,j)$ is the edit distance between the first $i$ characters of the source and the first $j$ characters of the target — exactly the value in cell $(i,j)$ of the grid on the right.</div>
+        <div class="math-row">
+          <div class="eq">D(i,j) = <span class="rm">max(i,j)</span> &nbsp; <span class="dim">if min(i,j) = 0</span></div>
+          <div class="eq">D(i,j) = <span class="rm">min</span><span class="piecewise">
+            <div>D(i&minus;1,&nbsp;j)&nbsp;+&nbsp;1 <span class="dim">(delete)</span></div>
+            <div>D(i,&nbsp;j&minus;1)&nbsp;+&nbsp;1 <span class="dim">(insert)</span></div>
+            <div>D(i&minus;1,&nbsp;j&minus;1)&nbsp;+&nbsp;cost <span class="dim">(match / substitute)</span></div>
+          </span></div>
+        </div>
+        <div class="math-note">D(i,j) is the edit distance between the first i characters of the source and the first j characters of the target — exactly the value in cell (i,j) of the grid on the right. <span class="dim">cost = 0 if the characters match, 1 otherwise.</span></div>
       </div>
 
       <div class="field-row">
@@ -120,8 +131,8 @@
 
       <div class="math-box">
         <div class="math-title">The formula</div>
-        <div class="math-row">$$TTR=\dfrac{|V|}{N}$$</div>
-        <div class="math-note">$|V|$ is the number of unique word types, $N$ is the total token count. $TTR\in[0,1]$ — closer to 1 means almost every word is different; closer to 0 means heavy repetition.</div>
+        <div class="math-row"><div class="eq">TTR = <span class="frac"><span class="num">|V|</span><span class="den">N</span></span></div></div>
+        <div class="math-note"><span class="rm">|V|</span> is the number of unique word types, <span class="rm">N</span> is the total token count. TTR ranges 0–1 — closer to 1 means almost every word is different; closer to 0 means heavy repetition.</div>
       </div>
 
       <div class="field-row" style="align-items:flex-start;">
@@ -153,10 +164,16 @@
 
       <div class="math-box">
         <div class="math-title">Model, loss, and the update rule</div>
-        <div class="math-row">$$\hat y = mx+b \qquad\qquad L(m,b)=\dfrac{1}{n}\sum_{i=1}^{n}\left(mx_i+b-y_i\right)^2$$</div>
-        <div class="math-row">$$m \leftarrow m-\alpha\,\dfrac{\partial L}{\partial m}, \qquad b \leftarrow b-\alpha\,\dfrac{\partial L}{\partial b}$$</div>
-        <div class="math-row">$$\dfrac{\partial L}{\partial m}=\dfrac{2}{n}\sum_i (mx_i+b-y_i)\,x_i \qquad\qquad \dfrac{\partial L}{\partial b}=\dfrac{2}{n}\sum_i (mx_i+b-y_i)$$</div>
-        <div class="math-note">$\alpha$ is the learning rate slider. Each "Step" click computes both partial derivatives across every data point and moves $(m,b)$ one increment down-slope — that's the ink dot moving across the heatmap.</div>
+        <div class="math-row">
+          <div class="eq">ŷ = mx + b &nbsp;&nbsp;&nbsp; L(m,b) = <span class="frac"><span class="num">1</span><span class="den">n</span></span><span class="bigsum">Σ<span class="hi">n</span><span class="lo">i=1</span></span>(mx<sub>i</sub>+b&minus;y<sub>i</sub>)<sup>2</sup></div>
+        </div>
+        <div class="math-row">
+          <div class="eq">m &larr; m &minus; α<span class="frac"><span class="num">∂L</span><span class="den">∂m</span></span> &nbsp;&nbsp;&nbsp; b &larr; b &minus; α<span class="frac"><span class="num">∂L</span><span class="den">∂b</span></span></div>
+        </div>
+        <div class="math-row">
+          <div class="eq"><span class="frac"><span class="num">∂L</span><span class="den">∂m</span></span> = <span class="frac"><span class="num">2</span><span class="den">n</span></span><span class="bigsum">Σ<span class="lo">i</span></span>(mx<sub>i</sub>+b&minus;y<sub>i</sub>)x<sub>i</sub> &nbsp;&nbsp;&nbsp; <span class="frac"><span class="num">∂L</span><span class="den">∂b</span></span> = <span class="frac"><span class="num">2</span><span class="den">n</span></span><span class="bigsum">Σ<span class="lo">i</span></span>(mx<sub>i</sub>+b&minus;y<sub>i</sub>)</div>
+        </div>
+        <div class="math-note">α is the learning rate slider. Each "Step" click computes both partial derivatives across every data point and moves (m,b) one increment down-slope — that's the ink dot moving across the heatmap.</div>
       </div>
 
       <div class="control-strip">
@@ -203,9 +220,13 @@
 
       <div class="math-box">
         <div class="math-title">Model and the bias-variance tradeoff</div>
-        <div class="math-row">$$\hat y=\sum_{k=0}^{d} w_k x^k \qquad\qquad \text{MSE}=\dfrac{1}{n}\sum_{i=1}^n(\hat y_i-y_i)^2$$</div>
-        <div class="math-row">$$\text{Expected Test Error} = \underbrace{\text{Bias}^2}_{\text{low }d} + \underbrace{\text{Variance}}_{\text{high }d} + \text{Irreducible Error}$$</div>
-        <div class="math-note">Low $d$ underfits (high bias, the curve is too rigid to capture the pattern). High $d$ overfits (high variance, the curve chases noise and swings wildly for small data changes). The sweet spot minimizes total test error.</div>
+        <div class="math-row">
+          <div class="eq">ŷ = <span class="bigsum">Σ<span class="hi">d</span><span class="lo">k=0</span></span> w<sub>k</sub> x<sup>k</sup> &nbsp;&nbsp;&nbsp; MSE = <span class="frac"><span class="num">1</span><span class="den">n</span></span><span class="bigsum">Σ<span class="hi">n</span><span class="lo">i=1</span></span>(ŷ<sub>i</sub>&minus;y<sub>i</sub>)<sup>2</sup></div>
+        </div>
+        <div class="math-row">
+          <div class="eq">Expected Test Error = Bias<sup>2</sup> + Variance + Irreducible Error</div>
+        </div>
+        <div class="math-note">Bias<sup>2</sup> is largest at low degree (underfitting); Variance is largest at high degree (overfitting).</div>
       </div>
 
       <div class="control-strip">
@@ -243,8 +264,11 @@
 
       <div class="math-box">
         <div class="math-title">Distance and the vote</div>
-        <div class="math-row">$$d(x,x_i)=\sqrt{\sum_{j=1}^{p}\left(x_j-x_{i,j}\right)^2} \qquad\qquad \hat y=\text{mode}\left\{\,y_{(1)},\,y_{(2)},\,\dots,\,y_{(k)}\,\right\}$$</div>
-        <div class="math-note">$d$ is ordinary Euclidean distance in 2D here. The $k$ closest points by that distance cast one vote each for their class; the majority class becomes the prediction.</div>
+        <div class="math-row">
+          <div class="eq">d(x,x<sub>i</sub>) = <span class="sqrt">√<span class="sqrt-bar"><span class="bigsum">Σ<span class="hi">p</span><span class="lo">j=1</span></span>(x<sub>j</sub>&minus;x<sub>i,j</sub>)<sup>2</sup></span></span></div>
+          <div class="eq">ŷ = mode{ y<sub>(1)</sub>, y<sub>(2)</sub>, …, y<sub>(k)</sub> }</div>
+        </div>
+        <div class="math-note">d is ordinary Euclidean distance in 2D here. The k closest points by that distance cast one vote each for their class; the majority class becomes the prediction.</div>
       </div>
 
       <div class="control-strip">
@@ -280,9 +304,14 @@
 
       <div class="math-box">
         <div class="math-title">Objective and the two steps</div>
-        <div class="math-row">$$J=\sum_{i=1}^{k}\sum_{x\in C_i}\lVert x-\mu_i\rVert^2$$</div>
-        <div class="math-row">$$\text{Assign: } c(x)=\underset{i}{\arg\min}\;\lVert x-\mu_i\rVert^2 \qquad\qquad \text{Update: } \mu_i=\dfrac{1}{|C_i|}\sum_{x\in C_i}x$$</div>
-        <div class="math-note">$J$ is the inertia charted on the right — total squared distance from every point to its own centroid. Each full assign/update cycle can only decrease or hold $J$, which is why it's guaranteed to converge.</div>
+        <div class="math-row">
+          <div class="eq">J = <span class="bigsum">Σ<span class="hi">k</span><span class="lo">i=1</span></span><span class="bigsum">Σ<span class="lo">x∈C<sub>i</sub></span></span>‖x&minus;μ<sub>i</sub>‖<sup>2</sup></div>
+        </div>
+        <div class="math-row">
+          <div class="eq"><span class="rm">Assign:</span> c(x) = argmin<sub>i</sub> ‖x&minus;μ<sub>i</sub>‖<sup>2</sup></div>
+          <div class="eq"><span class="rm">Update:</span> μ<sub>i</sub> = <span class="frac"><span class="num">1</span><span class="den">|C<sub>i</sub>|</span></span><span class="bigsum">Σ<span class="lo">x∈C<sub>i</sub></span></span> x</div>
+        </div>
+        <div class="math-note">J is the inertia charted on the right — total squared distance from every point to its own centroid. Each full assign/update cycle can only decrease or hold J, which is why it's guaranteed to converge.</div>
       </div>
 
       <div class="control-strip">
@@ -323,9 +352,13 @@
 
       <div class="math-box">
         <div class="math-title">Model and loss</div>
-        <div class="math-row">$$\sigma(z)=\dfrac{1}{1+e^{-z}} \qquad\qquad \hat p=\sigma\!\left(w_1x_1+w_2x_2+b\right)$$</div>
-        <div class="math-row">$$L=-\dfrac{1}{n}\sum_{i=1}^n\left[y_i\log\hat p_i+(1-y_i)\log(1-\hat p_i)\right]$$</div>
-        <div class="math-note">The boundary drawn is where $\hat p=0.5$, i.e. $w_1x_1+w_2x_2+b=0$ — a straight line because the model is linear in $x_1,x_2$ even though $\sigma$ itself is curved.</div>
+        <div class="math-row">
+          <div class="eq">σ(z) = <span class="frac"><span class="num">1</span><span class="den">1+e<sup>&minus;z</sup></span></span> &nbsp;&nbsp;&nbsp; p̂ = σ(w<sub>1</sub>x<sub>1</sub>+w<sub>2</sub>x<sub>2</sub>+b)</div>
+        </div>
+        <div class="math-row">
+          <div class="eq">L = &minus;<span class="frac"><span class="num">1</span><span class="den">n</span></span><span class="bigsum">Σ<span class="hi">n</span><span class="lo">i=1</span></span>[y<sub>i</sub> log p̂<sub>i</sub> + (1&minus;y<sub>i</sub>) log(1&minus;p̂<sub>i</sub>)]</div>
+        </div>
+        <div class="math-note">The boundary drawn is where p̂ = 0.5, i.e. w<sub>1</sub>x<sub>1</sub>+w<sub>2</sub>x<sub>2</sub>+b = 0 — a straight line because the model is linear in x<sub>1</sub>,x<sub>2</sub> even though σ itself is curved.</div>
       </div>
 
       <div class="control-strip">
@@ -369,8 +402,13 @@
 
       <div class="math-box">
         <div class="math-title">The four metrics</div>
-        <div class="math-row">$$Precision=\dfrac{TP}{TP+FP} \qquad Recall=\dfrac{TP}{TP+FN} \qquad F_1=\dfrac{2\cdot P\cdot R}{P+R} \qquad Accuracy=\dfrac{TP+TN}{TP+TN+FP+FN}$$</div>
-        <div class="math-note">Raising the threshold shrinks the "predicted positive" region — FP tends to fall (precision rises) but FN tends to rise (recall falls). $F_1$ is the harmonic mean of precision and recall, so it drops sharply if either one is low.</div>
+        <div class="math-row">
+          <div class="eq">Precision = <span class="frac"><span class="num">TP</span><span class="den">TP+FP</span></span> &nbsp;&nbsp;&nbsp; Recall = <span class="frac"><span class="num">TP</span><span class="den">TP+FN</span></span></div>
+        </div>
+        <div class="math-row">
+          <div class="eq">F<sub>1</sub> = <span class="frac"><span class="num">2·P·R</span><span class="den">P+R</span></span> &nbsp;&nbsp;&nbsp; Accuracy = <span class="frac"><span class="num">TP+TN</span><span class="den">TP+TN+FP+FN</span></span></div>
+        </div>
+        <div class="math-note">Raising the threshold shrinks the "predicted positive" region — FP tends to fall (precision rises) but FN tends to rise (recall falls). F1 is the harmonic mean of precision and recall, so it drops sharply if either one is low.</div>
       </div>
 
       <div class="control-strip">
@@ -426,8 +464,10 @@
 
       <div class="math-box">
         <div class="math-title">Octet to decimal</div>
-        <div class="math-row">$$\text{octet} = \sum_{i=0}^{7} b_i \cdot 2^{i} \qquad (b_7\,b_6\,b_5\,b_4\,b_3\,b_2\,b_1\,b_0)$$</div>
-        <div class="math-note">Each of the 8 bit toggles above is worth $2^7=128$ down to $2^0=1$, left to right — hover a bit to see its value.</div>
+        <div class="math-row">
+          <div class="eq">octet = <span class="bigsum">Σ<span class="hi">7</span><span class="lo">i=0</span></span> b<sub>i</sub> · 2<sup>i</sup></div>
+        </div>
+        <div class="math-note">Each of the 8 bit toggles above is worth 2<sup>7</sup>=128 down to 2<sup>0</sup>=1, left to right — hover a bit to see its value.</div>
       </div>
 
       <div class="ip-input-row">
@@ -455,9 +495,13 @@
 
       <div class="math-box">
         <div class="math-title">Key formulas</div>
-        <div class="math-row">$$\text{Network} = IP \;\&\; \text{Mask} \qquad\qquad \text{Broadcast} = \text{Network} \;|\; \overline{\text{Mask}}$$</div>
-        <div class="math-row">$$\text{Usable hosts} = 2^{(32-\text{prefix})}-2$$</div>
-        <div class="math-note">$\&$ is bitwise AND, $|$ is bitwise OR, and $\overline{\text{Mask}}$ (the wildcard mask) flips every bit of the mask. The $-2$ excludes the network and broadcast addresses themselves — except at $/31$ and $/32$, which have their own special-case rules (used for point-to-point links and single hosts).</div>
+        <div class="math-row">
+          <div class="eq">Network = IP <span class="rm">AND</span> Mask &nbsp;&nbsp;&nbsp; Broadcast = Network <span class="rm">OR</span> (<span class="rm">NOT</span> Mask)</div>
+        </div>
+        <div class="math-row">
+          <div class="eq">Usable hosts = 2<sup>(32&minus;prefix)</sup> &minus; 2</div>
+        </div>
+        <div class="math-note"><span class="rm">AND</span> / <span class="rm">OR</span> / <span class="rm">NOT</span> are bitwise operations on the 32-bit address. <span class="rm">NOT</span> Mask (the wildcard mask) flips every bit of the mask. The &minus;2 excludes the network and broadcast addresses themselves — except at /31 and /32, which have their own special-case rules (used for point-to-point links and single hosts).</div>
       </div>
 
       <div class="ip-input-row">
@@ -494,9 +538,91 @@
       </table>
     </section>
 
+    <!-- ===================== EXPLORATORY DATA ANALYSIS ===================== -->
+    <section class="module" id="mod-eda">
+      <h2 class="mod-title">Exploratory Data Analysis</h2>
+      <div class="mod-desc">Upload a CSV or Excel file — or load the built-in sample — for an instant profile: column types, missing values, summary statistics, distributions, and a correlation heatmap. Everything runs in your browser; the file is never uploaded anywhere.</div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:320px;">
+          <label for="edaFileInput">CSV or Excel file</label>
+          <input type="file" id="edaFileInput" accept=".csv,.xlsx,.xls">
+        </div>
+        <div class="btn-group">
+          <button class="action ghost" id="edaLoadSample">Load sample dataset</button>
+        </div>
+      </div>
+      <p class="note" id="edaStatus">No dataset loaded yet — upload a file or load the sample.</p>
+
+      <div id="edaResults" style="display:none;">
+        <div class="readout-row">
+          <div class="readout"><div class="n" id="edaRows">0</div><div class="l">rows</div></div>
+          <div class="readout"><div class="n" id="edaCols">0</div><div class="l">columns</div></div>
+          <div class="readout accent"><div class="n" id="edaMissing">0</div><div class="l">missing cells</div></div>
+          <div class="readout"><div class="n" id="edaNumericCount">0</div><div class="l">numeric cols</div></div>
+          <div class="readout"><div class="n" id="edaCatCount">0</div><div class="l">categorical cols</div></div>
+        </div>
+
+        <div class="trace-title" style="margin-top:6px;">Column overview</div>
+        <div class="table-scroll">
+          <table class="subnet-table" id="edaColumnTable">
+            <thead><tr><th>Column</th><th>Type</th><th>Missing</th><th>Unique / Mean</th></tr></thead>
+            <tbody id="edaColumnTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="trace-title" style="margin-top:24px;">Visualizations</div>
+        <div class="control-strip">
+          <div class="field" style="max-width:210px;">
+            <label for="edaChartType">Chart type</label>
+            <select id="edaChartType">
+              <option value="histogram">Histogram</option>
+              <option value="box">Box plot</option>
+              <option value="line">Line chart (row order)</option>
+              <option value="bar">Bar chart (categorical)</option>
+              <option value="pie">Pie chart (categorical)</option>
+              <option value="scatter">Scatter plot (two numeric)</option>
+            </select>
+          </div>
+          <div class="field" id="edaChartColWrapX" style="max-width:220px;">
+            <label for="edaChartColX" id="edaChartColXLabel">Column</label>
+            <select id="edaChartColX"></select>
+          </div>
+          <div class="field" id="edaChartColWrapY" style="max-width:220px;display:none;">
+            <label for="edaChartColY">Y column</label>
+            <select id="edaChartColY"></select>
+          </div>
+        </div>
+        <div class="canvas-box readonly">
+          <canvas id="edaChartCanvas" width="640" height="360"></canvas>
+          <div class="mini-legend" id="edaChartLegend"></div>
+        </div>
+        <p class="note" id="edaChartNote"></p>
+
+        <div class="field-row" style="margin-top:24px;align-items:flex-end;">
+          <div class="field" style="max-width:280px;">
+            <label for="edaColumnSelect">Inspect column</label>
+            <select id="edaColumnSelect"></select>
+          </div>
+        </div>
+        <div id="edaColumnDetail"></div>
+
+        <div class="trace-title" style="margin-top:24px;">Correlation heatmap (numeric columns)</div>
+        <div id="edaCorrelationWrap"></div>
+
+        <div class="trace-title" style="margin-top:24px;">Preview (first 10 rows)</div>
+        <div class="table-scroll">
+          <table class="subnet-table" id="edaPreviewTable"></table>
+        </div>
+      </div>
+    </section>
+
   </main>
 </div>
 
+<footer class="site-footer">Made with <span class="heart">&hearts;</span> — MYLO — L1 Concept Lab &copy; 2026. All rights reserved.</footer>
+
+<script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script defer src="assets/js/canvas-utils.js"></script>
 <script defer src="assets/js/network-utils.js"></script>
 <script defer src="assets/js/levenshtein.js"></script>
@@ -509,6 +635,7 @@
 <script defer src="assets/js/confusion-matrix.js"></script>
 <script defer src="assets/js/ipaddress.js"></script>
 <script defer src="assets/js/subnet.js"></script>
+<script defer src="assets/js/eda.js"></script>
 <script defer src="assets/js/main.js"></script>
 </body>
 </html>

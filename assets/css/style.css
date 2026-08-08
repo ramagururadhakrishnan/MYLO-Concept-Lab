@@ -186,6 +186,17 @@ h1{
   .content{padding:24px 18px 60px 26px;}
 }
 
+.site-footer{
+  text-align:center;
+  padding:22px 20px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  color:var(--ink-soft);
+  border-top:1px solid var(--rule);
+  background:var(--paper-dim);
+}
+.site-footer .heart{color:var(--red);}
+
 
 section.module{
   display:none;
@@ -626,6 +637,64 @@ input[type=range]::-moz-range-track{
 }
 .math-box .katex{font-size:1.05em;}
 
+/* ---- Dependency-free math typesetting (no external library) ---- */
+.eq{
+  font-family:'Source Serif 4', serif;
+  font-style:italic;
+  font-size:16px;
+  line-height:2.3;
+  display:block;
+  color:var(--ink);
+}
+.eq + .eq{margin-top:2px;}
+.eq .rm{font-style:normal;}
+.eq .dim{font-style:normal;color:var(--ink-soft);font-size:0.82em;}
+.eq sup, .eq sub{font-style:italic;}
+.frac{
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  vertical-align:middle;
+  margin:0 6px;
+  font-size:0.9em;
+  line-height:1.2;
+  position:relative;
+  top:0.15em;
+}
+.frac .num{padding:0 4px 3px;border-bottom:1.3px solid var(--ink);}
+.frac .den{padding:3px 4px 0;}
+.bigsum{
+  position:relative;
+  display:inline-block;
+  font-size:1.55em;
+  line-height:1;
+  vertical-align:middle;
+  margin:0 5px 0 9px;
+  padding:0 2px;
+  top:0.08em;
+}
+.bigsum .lo, .bigsum .hi{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:0.32em;
+  white-space:nowrap;
+  font-style:normal;
+}
+.bigsum .lo{bottom:-0.55em;}
+.bigsum .hi{top:-0.7em;}
+.sqrt{white-space:nowrap;}
+.sqrt-bar{border-top:1.3px solid var(--ink);padding:0 4px;}
+.piecewise{
+  display:inline-block;
+  vertical-align:middle;
+  border-left:2px solid var(--ink);
+  padding-left:10px;
+  margin-left:4px;
+  font-size:0.92em;
+  line-height:1.7;
+}
+
 /* confusion matrix grid */
 .cm-layout{
   display:grid;
@@ -775,6 +844,76 @@ table.subnet-table td{
 table.subnet-table .st-label{color:var(--ink-soft);font-size:12.5px;}
 table.subnet-table .st-dec{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--red);white-space:nowrap;}
 table.subnet-table .st-bin{font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);white-space:nowrap;}
+
+/* ---- Data Science / EDA ---- */
+.table-scroll{overflow-x:auto;}
+select{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:13px;
+  background:var(--paper);
+  border:1px solid var(--ink);
+  border-radius:2px;
+  padding:9px 11px;
+  color:var(--ink);
+  width:100%;
+}
+input[type=file]{
+  font-family:'Inter',sans-serif;
+  font-size:12.5px;
+  color:var(--ink-soft);
+  background:var(--paper);
+  border:1px solid var(--rule);
+  border-radius:2px;
+  padding:8px 10px;
+  width:100%;
+}
+input[type=file]::file-selector-button{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11.5px;
+  background:var(--ink);
+  color:var(--card);
+  border:none;
+  border-radius:2px;
+  padding:6px 12px;
+  margin-right:10px;
+  cursor:pointer;
+}
+.eda-bar-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:8px 0;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12.5px;
+}
+.eda-bar-label{
+  width:110px;
+  flex-shrink:0;
+  color:var(--ink);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.eda-bar-track{
+  flex:1;
+  height:14px;
+  background:var(--paper-dim);
+  border-radius:2px;
+  overflow:hidden;
+}
+.eda-bar-fill{
+  height:100%;
+  background:var(--teal);
+  border-radius:2px;
+}
+.eda-bar-count{
+  width:34px;
+  text-align:right;
+  color:var(--ink-soft);
+  flex-shrink:0;
+}
+table.corr-table th, table.corr-table td{text-align:center;}
+table.corr-table .st-label{text-align:left;}
 
 /* Accessibility: visible keyboard focus everywhere */
 a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{

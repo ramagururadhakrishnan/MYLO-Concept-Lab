@@ -26,17 +26,25 @@ groups get added.
 | ML | Confusion Matrix, Precision/Recall/F1 — adjustable threshold over scored examples, live-updating matrix and metrics | `assets/js/confusion-matrix.js` |
 | Networks | IP Addressing — click any of the 32 bits to flip it, see class (A–E) and address type (private/loopback/link-local/etc.) update live | `assets/js/ipaddress.js` |
 | Networks | Subnetting — drag a CIDR prefix slider, see subnet mask, network/broadcast address, and usable host range recompute live | `assets/js/subnet.js` |
+| Data Science | Exploratory Data Analysis — upload a CSV/Excel file (or load the built-in sample) for column types, missing values, summary stats, distributions, and a correlation heatmap. Includes a chart-type picker (histogram, box plot, line, bar, pie, scatter) | `assets/js/eda.js` |
 
 Every module shares one visual language (a "field notebook" theme with
 red-pen edit marks, teal/red for correct/incorrect or class A/B) so new
 concepts feel like part of the same lab rather than bolted on. Each module
 also includes a "math-box" panel with the underlying formulas, typeset with
-[KaTeX](https://katex.org) (loaded from a CDN, so an internet connection is
-needed for the math to render — the raw LaTeX source still shows if it
-can't load). `assets/js/canvas-utils.js` holds shared canvas helpers
-(coordinate scaling, color interpolation, a seeded RNG) used by the ML
-modules; `assets/js/network-utils.js` holds shared IP/binary math used by
-the Networks modules.
+plain HTML/CSS (fractions, summations, radicals, sub/superscripts) — no
+external math library, so it renders identically everywhere with zero risk
+of a blocked CDN leaving raw formula text on the page. `assets/js/canvas-utils.js`
+holds shared canvas helpers (coordinate scaling, color interpolation, a
+seeded RNG) used by the ML modules; `assets/js/network-utils.js` holds
+shared IP/binary math used by the Networks modules.
+
+The EDA module's CSV parsing is fully self-contained (no dependency). Excel
+(`.xlsx`/`.xls`) parsing uses [SheetJS](https://sheetjs.com) loaded from a
+CDN, since parsing a binary spreadsheet format without any library isn't
+practical — this is the one deliberate external dependency in the lab. If
+that CDN is blocked on a given network, the module says so plainly and
+suggests exporting the file as CSV instead, which always works.
 
 ## Running it locally
 
@@ -93,6 +101,7 @@ mylo-concept-lab/
 │   │   ├── confusion-matrix.js   # ML — Confusion Matrix / Precision / Recall / F1
 │   │   ├── ipaddress.js          # Networks — IP Addressing
 │   │   ├── subnet.js             # Networks — Subnetting
+│   │   ├── eda.js                # Data Science — Exploratory Data Analysis
 │   │   └── main.js               # sidebar nav (groups + sub-tabs) + boot sequence
 │   └── img/                      # (empty — reserved for future modules)
 ├── .nojekyll

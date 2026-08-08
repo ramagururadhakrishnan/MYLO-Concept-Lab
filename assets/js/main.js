@@ -40,16 +40,5 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof initConfusionMatrixModule === 'function') initConfusionMatrixModule();
   if (typeof initIPAddressModule === 'function') initIPAddressModule();
   if (typeof initSubnetModule === 'function') initSubnetModule();
-
-  // Render every math-box formula once, across all modules (including
-  // currently-hidden ones — KaTeX doesn't need a visible element to render).
-  if (typeof renderMathInElement === 'function') {
-    renderMathInElement(document.body, {
-      delimiters: [
-        { left: '$$', right: '$$', display: true },
-        { left: '$', right: '$', display: false }
-      ],
-      throwOnError: false
-    });
-  }
+  if (typeof initEDAModule === 'function') initEDAModule();
 });
