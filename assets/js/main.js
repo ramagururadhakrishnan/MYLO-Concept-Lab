@@ -17,4 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   if (typeof initLevenshteinModule === 'function') initLevenshteinModule();
   if (typeof initTTRModule === 'function') initTTRModule();
+  if (typeof initLinRegModule === 'function') initLinRegModule();
+  if (typeof initOverfittingModule === 'function') initOverfittingModule();
+  if (typeof initKNNModule === 'function') initKNNModule();
+  if (typeof initKMeansModule === 'function') initKMeansModule();
+  if (typeof initDecisionBoundaryModule === 'function') initDecisionBoundaryModule();
+  if (typeof initConfusionMatrixModule === 'function') initConfusionMatrixModule();
 });
