@@ -4,340 +4,433 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MYLO — L1 Concept Lab</title>
-<meta name="description" content="MYLO — L1 Concept Lab: interactive lessons for foundational ML/NLP concepts like Levenshtein distance and type-token ratio.">
+<meta name="description" content="MYLO — L1 Concept Lab: interactive lessons across NLP, Machine Learning, and Networks fundamentals.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-<div class="page">
-  <div class="margin-rule"></div>
-  <header>
+
+<div class="topbar">
+  <button class="menu-btn" id="sidebarMenuBtn" aria-label="Toggle menu">&#9776;</button>
+  <div class="topbar-titles">
     <div class="eyebrow">MYLO — for classroom use</div>
     <h1><span class="brand-mark">L1</span> Concept Lab</h1>
-    <div class="sub">Small, hands-on algorithms from early ML and NLP courses. Edit the inputs, drag the sliders, and watch the arithmetic happen instead of reading about it.</div>
-    <nav class="tabs">
-      <button class="tab-btn active" data-tab="lev">01 · Levenshtein Distance</button>
-      <button class="tab-btn" data-tab="ttr">02 · Type-Token Ratio</button>
-      <button class="tab-btn" data-tab="linreg">03 · Linear Regression + GD</button>
-      <button class="tab-btn" data-tab="overfit">04 · Overfit vs Underfit</button>
-      <button class="tab-btn" data-tab="knn">05 · k-Nearest Neighbors</button>
-      <button class="tab-btn" data-tab="kmeans">06 · k-Means Clustering</button>
-      <button class="tab-btn" data-tab="decision">07 · Decision Boundary</button>
-      <button class="tab-btn" data-tab="confusion">08 · Confusion Matrix</button>
+    <div class="topbar-sub" id="lab-heading-sub">Small, hands-on simulators across NLP, Machine Learning, and Networks. Pick a topic on the left, edit the inputs, and watch the arithmetic happen.</div>
+  </div>
+</div>
+
+<div class="lab-shell">
+  <aside class="sidebar">
+    <nav class="side-nav">
+
+      <div class="nav-group" data-group="nlp">
+        <button class="group-toggle">Natural Language Processing <span class="chev">&#9662;</span></button>
+        <div class="group-items">
+          <button class="side-tab active" data-tab="lev">Levenshtein Distance</button>
+          <button class="side-tab" data-tab="ttr">Type-Token Ratio</button>
+        </div>
+      </div>
+
+      <div class="nav-group" data-group="ml">
+        <button class="group-toggle">Machine Learning <span class="chev">&#9662;</span></button>
+        <div class="group-items">
+          <button class="side-tab" data-tab="linreg">Linear Regression + GD</button>
+          <button class="side-tab" data-tab="overfit">Overfit vs Underfit</button>
+          <button class="side-tab" data-tab="knn">k-Nearest Neighbors</button>
+          <button class="side-tab" data-tab="kmeans">k-Means Clustering</button>
+          <button class="side-tab" data-tab="decision">Decision Boundary</button>
+          <button class="side-tab" data-tab="confusion">Confusion Matrix</button>
+        </div>
+      </div>
+
+      <div class="nav-group" data-group="networks">
+        <button class="group-toggle">Networks <span class="chev">&#9662;</span></button>
+        <div class="group-items">
+          <button class="side-tab" data-tab="ipaddr">IP Addressing</button>
+          <button class="side-tab" data-tab="subnet">Subnetting</button>
+        </div>
+      </div>
+
     </nav>
-  </header>
+  </aside>
 
-  <!-- ===================== LEVENSHTEIN MODULE ===================== -->
-  <section class="module active" id="mod-lev">
-    <h2 class="mod-title">Levenshtein (Edit) Distance</h2>
-    <div class="mod-desc">The minimum number of single-character insertions, deletions, or substitutions needed to turn one word into another. Used for spell-checkers, fuzzy matching, and DNA sequence comparison.</div>
+  <main class="content">
+    <div class="margin-rule"></div>
 
-    <div class="field-row">
-      <div class="field">
-        <label for="wordA">Source word</label>
-        <input type="text" id="wordA" value="kitten" maxlength="18">
-      </div>
-      <div class="field">
-        <label for="wordB">Target word</label>
-        <input type="text" id="wordB" value="sitting" maxlength="18">
-      </div>
-      <button class="action" id="levGo">Compute</button>
-    </div>
+    <!-- ===================== LEVENSHTEIN ===================== -->
+    <section class="module active" id="mod-lev">
+      <h2 class="mod-title">Levenshtein (Edit) Distance</h2>
+      <div class="mod-desc">The minimum number of single-character insertions, deletions, or substitutions needed to turn one word into another. Used for spell-checkers, fuzzy matching, and DNA sequence comparison.</div>
 
-    <div class="lev-result">
-      <div class="big" id="levNumber">3</div>
-      <div class="label">edits needed to turn<br><span id="levWordsLabel">"kitten" into "sitting"</span></div>
-    </div>
-
-    <div class="lev-columns">
-      <div class="trace-box">
-        <div class="trace-title">Edit trace — step through the transformation</div>
-        <div class="trace-line" id="traceLine"></div>
-        <div class="step-controls">
-          <button class="action ghost" id="stepBack">&larr; back</button>
-          <span class="step-count" id="stepCount">step 0 / 0</span>
-          <button class="action ghost" id="stepFwd">forward &rarr;</button>
+      <div class="field-row">
+        <div class="field">
+          <label for="wordA">Source word</label>
+          <input type="text" id="wordA" value="kitten" maxlength="18">
         </div>
-        <div class="legend">
-          <span><span class="swatch" style="background:var(--red)"></span> delete</span>
-          <span><span class="swatch" style="background:var(--teal)"></span> insert</span>
-          <span><span class="swatch" style="background:var(--red-soft)"></span> substitute (red &rarr; teal)</span>
+        <div class="field">
+          <label for="wordB">Target word</label>
+          <input type="text" id="wordB" value="sitting" maxlength="18">
+        </div>
+        <button class="action" id="levGo">Compute</button>
+      </div>
+
+      <div class="lev-result">
+        <div class="big" id="levNumber">3</div>
+        <div class="label">edits needed to turn<br><span id="levWordsLabel">"kitten" into "sitting"</span></div>
+      </div>
+
+      <div class="lev-columns">
+        <div class="trace-box">
+          <div class="trace-title">Edit trace — step through the transformation</div>
+          <div class="trace-line" id="traceLine"></div>
+          <div class="step-controls">
+            <button class="action ghost" id="stepBack">&larr; back</button>
+            <span class="step-count" id="stepCount">step 0 / 0</span>
+            <button class="action ghost" id="stepFwd">forward &rarr;</button>
+          </div>
+          <div class="legend">
+            <span><span class="swatch" style="background:var(--red)"></span> delete</span>
+            <span><span class="swatch" style="background:var(--teal)"></span> insert</span>
+            <span><span class="swatch" style="background:var(--red-soft)"></span> substitute (red &rarr; teal)</span>
+          </div>
+        </div>
+
+        <div class="trace-box">
+          <div class="trace-title">Dynamic programming grid — red path is the optimal route</div>
+          <div class="grid-wrap"><table class="grid" id="dpGrid"></table></div>
+          <div class="note">Each cell is the edit distance between the prefixes it lines up with. The bottom-right cell is the final answer; the highlighted path is one shortest route to build it.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== TTR ===================== -->
+    <section class="module" id="mod-ttr">
+      <h2 class="mod-title">Type-Token Ratio (TTR)</h2>
+      <div class="mod-desc">A quick measure of lexical diversity. A <b>token</b> is any word occurrence; a <b>type</b> is a distinct word. A high ratio means little repetition, a low ratio means the text leans on the same words often.</div>
+
+      <div class="field-row" style="align-items:flex-start;">
+        <div class="field" style="flex:1 1 100%;">
+          <label for="ttrText">Sample text</label>
+          <textarea id="ttrText">the quick brown fox jumps over the lazy dog while the dog barks at the quick fox</textarea>
+        </div>
+      </div>
+      <div class="field-row" style="margin-top:-6px;">
+        <button class="action" id="ttrGo">Analyze</button>
+      </div>
+
+      <div class="ttr-stats">
+        <div class="stat"><div class="n" id="statTokens">0</div><div class="l">total tokens</div></div>
+        <div class="stat"><div class="n" id="statTypes">0</div><div class="l">unique types</div></div>
+        <div class="stat ratio"><div class="n" id="statRatio">0.00</div><div class="l">type-token ratio</div></div>
+      </div>
+
+      <div class="token-field" id="tokenField"></div>
+
+      <div class="formula">TTR = <b>unique types</b> &divide; <b>total tokens</b> — e.g. <span id="formulaEcho"></span></div>
+      <div class="note">Longer texts naturally push TTR down (common words like "the" repeat), so TTR is best used to compare passages of similar length.</div>
+    </section>
+
+    <!-- ===================== LINEAR REGRESSION + GD ===================== -->
+    <section class="module" id="mod-linreg">
+      <h2 class="mod-title">Linear Regression + Gradient Descent</h2>
+      <div class="mod-desc">Gradient descent nudges the slope <b>m</b> and intercept <b>b</b> downhill on the loss surface until the fitted line stops improving. The right panel <i>is</i> that loss surface — teal is low loss, red is high — with the descent path traced across it.</div>
+
+      <div class="control-strip">
+        <div class="btn-group">
+          <button class="action" id="lrStep">Step</button>
+          <button class="action" id="lrRun">Run 25 steps</button>
+          <button class="action ghost" id="lrResetParams">Reset params</button>
+          <button class="action ghost" id="lrNewData">New data</button>
+        </div>
+        <div class="slider-field">
+          <div class="slider-head"><span>Learning rate</span><b id="lrRateVal">0.010</b></div>
+          <input type="range" id="lrRate" min="0.001" max="0.05" step="0.001" value="0.01">
         </div>
       </div>
 
-      <div class="trace-box">
-        <div class="trace-title">Dynamic programming grid — red path is the optimal route</div>
-        <div class="grid-wrap"><table class="grid" id="dpGrid"></table></div>
-        <div class="note">Each cell is the edit distance between the prefixes it lines up with. The bottom-right cell is the final answer; the highlighted path is one shortest route to build it.</div>
+      <div class="readout-row">
+        <div class="readout"><div class="n" id="lrM">0.00</div><div class="l">slope (m)</div></div>
+        <div class="readout"><div class="n" id="lrB">0.00</div><div class="l">intercept (b)</div></div>
+        <div class="readout accent"><div class="n" id="lrLoss">0.00</div><div class="l">loss (MSE)</div></div>
+        <div class="readout"><div class="n" id="lrIter">0</div><div class="l">iterations</div></div>
       </div>
-    </div>
-  </section>
 
-  <!-- ===================== TTR MODULE ===================== -->
-  <section class="module" id="mod-ttr">
-    <h2 class="mod-title">Type-Token Ratio (TTR)</h2>
-    <div class="mod-desc">A quick measure of lexical diversity. A <b>token</b> is any word occurrence; a <b>type</b> is a distinct word. A high ratio means little repetition, a low ratio means the text leans on the same words often.</div>
-
-    <div class="field-row" style="align-items:flex-start;">
-      <div class="field" style="flex:1 1 100%;">
-        <label for="ttrText">Sample text</label>
-        <textarea id="ttrText">the quick brown fox jumps over the lazy dog while the dog barks at the quick fox</textarea>
+      <div class="ml-columns">
+        <div class="canvas-box readonly">
+          <div class="trace-title">Data + current fit line</div>
+          <canvas id="lrFitCanvas" width="480" height="340"></canvas>
+        </div>
+        <div class="canvas-box readonly">
+          <div class="trace-title">Loss surface (m vs b) + descent path</div>
+          <canvas id="lrLossCanvas" width="480" height="340"></canvas>
+          <div class="mini-legend">
+            <span><span class="swatch" style="background:var(--teal-soft)"></span> low loss</span>
+            <span><span class="swatch" style="background:var(--red)"></span> high loss</span>
+            <span><span class="swatch" style="background:var(--ink)"></span> current (m,b)</span>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="field-row" style="margin-top:-6px;">
-      <button class="action" id="ttrGo">Analyze</button>
-    </div>
+    </section>
 
-    <div class="ttr-stats">
-      <div class="stat"><div class="n" id="statTokens">0</div><div class="l">total tokens</div></div>
-      <div class="stat"><div class="n" id="statTypes">0</div><div class="l">unique types</div></div>
-      <div class="stat ratio"><div class="n" id="statRatio">0.00</div><div class="l">type-token ratio</div></div>
-    </div>
+    <!-- ===================== OVERFIT VS UNDERFIT ===================== -->
+    <section class="module" id="mod-overfit">
+      <h2 class="mod-title">Overfitting vs. Underfitting</h2>
+      <div class="mod-desc">A polynomial of degree <b>d</b> is fit to the teal training points. Push the degree up and the curve bends to chase every point — including noise — while error on the held-out red test points stops improving or gets worse.</div>
 
-    <div class="token-field" id="tokenField"></div>
-
-    <div class="formula">TTR = <b>unique types</b> &divide; <b>total tokens</b> — e.g. <span id="formulaEcho"></span></div>
-    <div class="note">Longer texts naturally push TTR down (common words like "the" repeat), so TTR is best used to compare passages of similar length.</div>
-  </section>
-
-  <!-- ===================== LINEAR REGRESSION + GRADIENT DESCENT ===================== -->
-  <section class="module" id="mod-linreg">
-    <h2 class="mod-title">Linear Regression + Gradient Descent</h2>
-    <div class="mod-desc">Gradient descent nudges the slope <b>m</b> and intercept <b>b</b> downhill on the loss surface until the fitted line stops improving. The right panel <i>is</i> that loss surface — teal is low loss, red is high — with the descent path traced across it.</div>
-
-    <div class="control-strip">
-      <div class="btn-group">
-        <button class="action" id="lrStep">Step</button>
-        <button class="action" id="lrRun">Run 25 steps</button>
-        <button class="action ghost" id="lrResetParams">Reset params</button>
-        <button class="action ghost" id="lrNewData">New data</button>
+      <div class="control-strip">
+        <div class="slider-field">
+          <div class="slider-head"><span>Polynomial degree</span><b id="ofDegreeVal">3</b></div>
+          <input type="range" id="ofDegree" min="1" max="9" step="1" value="3">
+        </div>
+        <div class="btn-group">
+          <button class="action ghost" id="ofNewData">New data</button>
+        </div>
       </div>
-      <div class="slider-field">
-        <div class="slider-head"><span>Learning rate</span><b id="lrRateVal">0.010</b></div>
-        <input type="range" id="lrRate" min="0.001" max="0.05" step="0.001" value="0.01">
-      </div>
-    </div>
 
-    <div class="readout-row">
-      <div class="readout"><div class="n" id="lrM">0.00</div><div class="l">slope (m)</div></div>
-      <div class="readout"><div class="n" id="lrB">0.00</div><div class="l">intercept (b)</div></div>
-      <div class="readout accent"><div class="n" id="lrLoss">0.00</div><div class="l">loss (MSE)</div></div>
-      <div class="readout"><div class="n" id="lrIter">0</div><div class="l">iterations</div></div>
-    </div>
-
-    <div class="ml-columns">
-      <div class="canvas-box readonly">
-        <div class="trace-title">Data + current fit line</div>
-        <canvas id="lrFitCanvas" width="480" height="340"></canvas>
+      <div class="readout-row">
+        <div class="readout"><div class="n" id="ofTrainErr">0.00</div><div class="l">train error (MSE)</div></div>
+        <div class="readout accent"><div class="n" id="ofTestErr">0.00</div><div class="l">test error (MSE)</div></div>
       </div>
-      <div class="canvas-box readonly">
-        <div class="trace-title">Loss surface (m vs b) + descent path</div>
-        <canvas id="lrLossCanvas" width="480" height="340"></canvas>
+
+      <div class="ml-columns">
+        <div class="canvas-box readonly">
+          <div class="trace-title">Fitted curve — teal = train, red-ring = test</div>
+          <canvas id="ofFitCanvas" width="480" height="320"></canvas>
+        </div>
+        <div class="canvas-box readonly">
+          <div class="trace-title">Error vs. degree — teal = train, red = test</div>
+          <canvas id="ofErrCanvas" width="480" height="320"></canvas>
+        </div>
+      </div>
+      <div class="verdict" id="ofVerdict">Reasonable fit.</div>
+    </section>
+
+    <!-- ===================== KNN ===================== -->
+    <section class="module" id="mod-knn">
+      <h2 class="mod-title">k-Nearest Neighbors</h2>
+      <div class="mod-desc">Click anywhere on the plot to drop a query point. It's classified by a majority vote among its <b>k</b> closest neighbors — the shaded background shows how that vote would go for every possible location.</div>
+
+      <div class="control-strip">
+        <div class="slider-field">
+          <div class="slider-head"><span>k</span><b id="knnKVal">5</b></div>
+          <input type="range" id="knnK" min="1" max="15" step="1" value="5">
+        </div>
+        <div class="btn-group">
+          <button class="action ghost" id="knnNewData">New data</button>
+        </div>
+      </div>
+
+      <div class="readout-row">
+        <div class="readout"><div class="n" id="knnVotes">—</div><div class="l">neighbor vote</div></div>
+        <div class="readout accent"><div class="n" id="knnPrediction">—</div><div class="l">prediction</div></div>
+      </div>
+
+      <div class="canvas-box">
+        <div class="trace-title">Click to place the query point</div>
+        <canvas id="knnCanvas" width="560" height="400"></canvas>
         <div class="mini-legend">
-          <span><span class="swatch" style="background:var(--teal-soft)"></span> low loss</span>
-          <span><span class="swatch" style="background:var(--red)"></span> high loss</span>
-          <span><span class="swatch" style="background:var(--ink)"></span> current (m,b)</span>
+          <span><span class="swatch" style="background:var(--teal)"></span> class A</span>
+          <span><span class="swatch" style="background:var(--red)"></span> class B</span>
+          <span><span class="swatch" style="background:var(--ink)"></span> query point</span>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ===================== OVERFITTING VS UNDERFITTING ===================== -->
-  <section class="module" id="mod-overfit">
-    <h2 class="mod-title">Overfitting vs. Underfitting</h2>
-    <div class="mod-desc">A polynomial of degree <b>d</b> is fit to the teal training points. Push the degree up and the curve bends to chase every point — including noise — while error on the held-out red test points stops improving or gets worse.</div>
+    <!-- ===================== K-MEANS ===================== -->
+    <section class="module" id="mod-kmeans">
+      <h2 class="mod-title">k-Means Clustering</h2>
+      <div class="mod-desc">k-Means alternates two steps: <b>assign</b> every point to its nearest centroid (&times;), then <b>update</b> each centroid to the mean of its assigned points. Step through it manually or run it to convergence.</div>
 
-    <div class="control-strip">
-      <div class="slider-field">
-        <div class="slider-head"><span>Polynomial degree</span><b id="ofDegreeVal">3</b></div>
-        <input type="range" id="ofDegree" min="1" max="9" step="1" value="3">
-      </div>
-      <div class="btn-group">
-        <button class="action ghost" id="ofNewData">New data</button>
-      </div>
-    </div>
-
-    <div class="readout-row">
-      <div class="readout"><div class="n" id="ofTrainErr">0.00</div><div class="l">train error (MSE)</div></div>
-      <div class="readout accent"><div class="n" id="ofTestErr">0.00</div><div class="l">test error (MSE)</div></div>
-    </div>
-
-    <div class="ml-columns">
-      <div class="canvas-box readonly">
-        <div class="trace-title">Fitted curve — teal = train, red-ring = test</div>
-        <canvas id="ofFitCanvas" width="480" height="320"></canvas>
-      </div>
-      <div class="canvas-box readonly">
-        <div class="trace-title">Error vs. degree — teal = train, red = test</div>
-        <canvas id="ofErrCanvas" width="480" height="320"></canvas>
-      </div>
-    </div>
-    <div class="verdict" id="ofVerdict">Reasonable fit.</div>
-  </section>
-
-  <!-- ===================== K-NEAREST NEIGHBORS ===================== -->
-  <section class="module" id="mod-knn">
-    <h2 class="mod-title">k-Nearest Neighbors</h2>
-    <div class="mod-desc">Click anywhere on the plot to drop a query point. It's classified by a majority vote among its <b>k</b> closest neighbors — the shaded background shows how that vote would go for every possible location.</div>
-
-    <div class="control-strip">
-      <div class="slider-field">
-        <div class="slider-head"><span>k</span><b id="knnKVal">5</b></div>
-        <input type="range" id="knnK" min="1" max="15" step="1" value="5">
-      </div>
-      <div class="btn-group">
-        <button class="action ghost" id="knnNewData">New data</button>
-      </div>
-    </div>
-
-    <div class="readout-row">
-      <div class="readout"><div class="n" id="knnVotes">—</div><div class="l">neighbor vote</div></div>
-      <div class="readout accent"><div class="n" id="knnPrediction">—</div><div class="l">prediction</div></div>
-    </div>
-
-    <div class="canvas-box">
-      <div class="trace-title">Click to place the query point</div>
-      <canvas id="knnCanvas" width="560" height="400"></canvas>
-      <div class="mini-legend">
-        <span><span class="swatch" style="background:var(--teal)"></span> class A</span>
-        <span><span class="swatch" style="background:var(--red)"></span> class B</span>
-        <span><span class="swatch" style="background:var(--ink)"></span> query point</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== K-MEANS CLUSTERING ===================== -->
-  <section class="module" id="mod-kmeans">
-    <h2 class="mod-title">k-Means Clustering</h2>
-    <div class="mod-desc">k-Means alternates two steps: <b>assign</b> every point to its nearest centroid (×), then <b>update</b> each centroid to the mean of its assigned points. Step through it manually or run it to convergence.</div>
-
-    <div class="control-strip">
-      <div class="slider-field">
-        <div class="slider-head"><span>k (clusters)</span><b id="kmKVal">3</b></div>
-        <input type="range" id="kmK" min="2" max="5" step="1" value="3">
-      </div>
-      <div class="btn-group">
-        <button class="action" id="kmStep">Step</button>
-        <button class="action" id="kmRun">Run to convergence</button>
-        <button class="action ghost" id="kmReset">Reset centroids</button>
-        <button class="action ghost" id="kmNewData">New data</button>
-      </div>
-    </div>
-
-    <div class="readout-row">
-      <div class="readout"><div class="n" id="kmIter">0</div><div class="l">iteration</div></div>
-      <div class="readout accent"><div class="n" id="kmInertia">—</div><div class="l">inertia (lower = tighter)</div></div>
-    </div>
-    <p class="note" id="kmPhase" style="margin-top:-10px;margin-bottom:16px;">Next: assign each point to its nearest centroid</p>
-
-    <div class="ml-columns">
-      <div class="canvas-box readonly">
-        <div class="trace-title">Points colored by current assignment, × = centroid</div>
-        <canvas id="kmCanvas" width="480" height="360"></canvas>
-      </div>
-      <div class="canvas-box readonly">
-        <div class="trace-title">Inertia over iterations</div>
-        <canvas id="kmInertiaCanvas" width="480" height="360"></canvas>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== DECISION BOUNDARY / LOGISTIC REGRESSION ===================== -->
-  <section class="module" id="mod-decision">
-    <h2 class="mod-title">Decision Boundary (Logistic Regression)</h2>
-    <div class="mod-desc">Logistic regression learns a straight boundary that separates the two classes by minimizing cross-entropy loss with gradient descent. Misclassified points are ringed; the shaded background is the model's predicted class at every location.</div>
-
-    <div class="control-strip">
-      <div class="btn-group">
-        <button class="action" id="dbStep">Step</button>
-        <button class="action" id="dbRun">Run 25 steps</button>
-        <button class="action ghost" id="dbResetWeights">Reset weights</button>
-        <button class="action ghost" id="dbNewData">New data</button>
-      </div>
-      <div class="slider-field">
-        <div class="slider-head"><span>Learning rate</span><b id="dbRateVal">0.500</b></div>
-        <input type="range" id="dbRate" min="0.01" max="1" step="0.01" value="0.5">
-      </div>
-    </div>
-
-    <div class="readout-row">
-      <div class="readout"><div class="n" id="dbIter">0</div><div class="l">iterations</div></div>
-      <div class="readout accent"><div class="n" id="dbLoss">0.000</div><div class="l">loss (cross-entropy)</div></div>
-      <div class="readout"><div class="n" id="dbAcc">—</div><div class="l">accuracy</div></div>
-    </div>
-
-    <div class="canvas-box readonly">
-      <div class="trace-title">Decision regions + boundary</div>
-      <canvas id="dbCanvas" width="560" height="400"></canvas>
-      <div class="mini-legend">
-        <span><span class="swatch" style="background:var(--teal)"></span> class 0</span>
-        <span><span class="swatch" style="background:var(--red)"></span> class 1</span>
-        <span>ringed point = misclassified</span>
-      </div>
-    </div>
-    <div class="canvas-box readonly" style="margin-top:16px;">
-      <div class="trace-title">Loss over training steps</div>
-      <canvas id="dbLossCanvas" width="560" height="140"></canvas>
-    </div>
-  </section>
-
-  <!-- ===================== CONFUSION MATRIX ===================== -->
-  <section class="module" id="mod-confusion">
-    <h2 class="mod-title">Confusion Matrix, Precision, Recall, F1</h2>
-    <div class="mod-desc">Each dot is an example scored by a classifier (0–1) with a true class. Sliding the decision threshold changes which dots count as "predicted positive" — watch precision, recall, and F1 trade off as the threshold moves.</div>
-
-    <div class="control-strip">
-      <div class="slider-field">
-        <div class="slider-head"><span>Decision threshold</span><b id="cmThreshVal">0.50</b></div>
-        <input type="range" id="cmThreshold" min="0" max="1" step="0.01" value="0.5">
-      </div>
-      <div class="btn-group">
-        <button class="action ghost" id="cmNewData">New data</button>
-      </div>
-    </div>
-
-    <div class="canvas-box readonly" style="margin-bottom:20px;">
-      <div class="trace-title">Scores 0&ndash;1 — red = true positive class, teal = true negative class</div>
-      <canvas id="cmStripCanvas" width="640" height="120"></canvas>
-      <div class="mini-legend">
-        <span>dashed line = threshold</span>
-        <span>ringed dot = misclassified at this threshold</span>
-      </div>
-    </div>
-
-    <div class="cm-layout">
-      <div>
-        <div class="trace-title" style="margin-bottom:10px;">Confusion matrix</div>
-        <div class="cm-grid">
-          <div class="cm-label"></div>
-          <div class="cm-label">Predicted positive</div>
-          <div class="cm-label">Predicted negative</div>
-          <div class="cm-label">Actual positive</div>
-          <div class="cm-cell correct"><span class="val" id="cellTP">0</span><span class="cap">True positive</span></div>
-          <div class="cm-cell wrong"><span class="val" id="cellFN">0</span><span class="cap">False negative</span></div>
-          <div class="cm-label">Actual negative</div>
-          <div class="cm-cell wrong"><span class="val" id="cellFP">0</span><span class="cap">False positive</span></div>
-          <div class="cm-cell correct"><span class="val" id="cellTN">0</span><span class="cap">True negative</span></div>
+      <div class="control-strip">
+        <div class="slider-field">
+          <div class="slider-head"><span>k (clusters)</span><b id="kmKVal">3</b></div>
+          <input type="range" id="kmK" min="2" max="5" step="1" value="3">
+        </div>
+        <div class="btn-group">
+          <button class="action" id="kmStep">Step</button>
+          <button class="action" id="kmRun">Run to convergence</button>
+          <button class="action ghost" id="kmReset">Reset centroids</button>
+          <button class="action ghost" id="kmNewData">New data</button>
         </div>
       </div>
-      <div>
-        <div class="trace-title" style="margin-bottom:10px;">Metrics</div>
-        <div class="ttr-stats" style="margin:0;">
-          <div class="stat"><div class="n" id="statPrecision">0.00</div><div class="l">precision</div></div>
-          <div class="stat"><div class="n" id="statRecall">0.00</div><div class="l">recall</div></div>
-          <div class="stat ratio"><div class="n" id="statF1">0.00</div><div class="l">F1 score</div></div>
-          <div class="stat"><div class="n" id="statAccuracy">0%</div><div class="l">accuracy</div></div>
-        </div>
-        <div class="formula">Precision = TP&divide;(TP+FP) &nbsp;·&nbsp; Recall = TP&divide;(TP+FN) &nbsp;·&nbsp; F1 = 2&middot;P&middot;R&divide;(P+R)</div>
-      </div>
-    </div>
-  </section>
 
-  <footer>MYLO — L1 Concept Lab · edit inputs, drag sliders, click plots — everything recomputes live</footer>
+      <div class="readout-row">
+        <div class="readout"><div class="n" id="kmIter">0</div><div class="l">iteration</div></div>
+        <div class="readout accent"><div class="n" id="kmInertia">—</div><div class="l">inertia (lower = tighter)</div></div>
+      </div>
+      <p class="note" id="kmPhase" style="margin-top:-10px;margin-bottom:16px;">Next: assign each point to its nearest centroid</p>
+
+      <div class="ml-columns">
+        <div class="canvas-box readonly">
+          <div class="trace-title">Points colored by current assignment, &times; = centroid</div>
+          <canvas id="kmCanvas" width="480" height="360"></canvas>
+        </div>
+        <div class="canvas-box readonly">
+          <div class="trace-title">Inertia over iterations</div>
+          <canvas id="kmInertiaCanvas" width="480" height="360"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== DECISION BOUNDARY ===================== -->
+    <section class="module" id="mod-decision">
+      <h2 class="mod-title">Decision Boundary (Logistic Regression)</h2>
+      <div class="mod-desc">Logistic regression learns a straight boundary that separates the two classes by minimizing cross-entropy loss with gradient descent. Misclassified points are ringed; the shaded background is the model's predicted class at every location.</div>
+
+      <div class="control-strip">
+        <div class="btn-group">
+          <button class="action" id="dbStep">Step</button>
+          <button class="action" id="dbRun">Run 25 steps</button>
+          <button class="action ghost" id="dbResetWeights">Reset weights</button>
+          <button class="action ghost" id="dbNewData">New data</button>
+        </div>
+        <div class="slider-field">
+          <div class="slider-head"><span>Learning rate</span><b id="dbRateVal">0.500</b></div>
+          <input type="range" id="dbRate" min="0.01" max="1" step="0.01" value="0.5">
+        </div>
+      </div>
+
+      <div class="readout-row">
+        <div class="readout"><div class="n" id="dbIter">0</div><div class="l">iterations</div></div>
+        <div class="readout accent"><div class="n" id="dbLoss">0.000</div><div class="l">loss (cross-entropy)</div></div>
+        <div class="readout"><div class="n" id="dbAcc">—</div><div class="l">accuracy</div></div>
+      </div>
+
+      <div class="canvas-box readonly">
+        <div class="trace-title">Decision regions + boundary</div>
+        <canvas id="dbCanvas" width="560" height="400"></canvas>
+        <div class="mini-legend">
+          <span><span class="swatch" style="background:var(--teal)"></span> class 0</span>
+          <span><span class="swatch" style="background:var(--red)"></span> class 1</span>
+          <span>ringed point = misclassified</span>
+        </div>
+      </div>
+      <div class="canvas-box readonly" style="margin-top:16px;">
+        <div class="trace-title">Loss over training steps</div>
+        <canvas id="dbLossCanvas" width="560" height="140"></canvas>
+      </div>
+    </section>
+
+    <!-- ===================== CONFUSION MATRIX ===================== -->
+    <section class="module" id="mod-confusion">
+      <h2 class="mod-title">Confusion Matrix, Precision, Recall, F1</h2>
+      <div class="mod-desc">Each dot is an example scored by a classifier (0–1) with a true class. Sliding the decision threshold changes which dots count as "predicted positive" — watch precision, recall, and F1 trade off as the threshold moves.</div>
+
+      <div class="control-strip">
+        <div class="slider-field">
+          <div class="slider-head"><span>Decision threshold</span><b id="cmThreshVal">0.50</b></div>
+          <input type="range" id="cmThreshold" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div class="btn-group">
+          <button class="action ghost" id="cmNewData">New data</button>
+        </div>
+      </div>
+
+      <div class="canvas-box readonly" style="margin-bottom:20px;">
+        <div class="trace-title">Scores 0&ndash;1 — red = true positive class, teal = true negative class</div>
+        <canvas id="cmStripCanvas" width="640" height="120"></canvas>
+        <div class="mini-legend">
+          <span>dashed line = threshold</span>
+          <span>ringed dot = misclassified at this threshold</span>
+        </div>
+      </div>
+
+      <div class="cm-layout">
+        <div>
+          <div class="trace-title" style="margin-bottom:10px;">Confusion matrix</div>
+          <div class="cm-grid">
+            <div class="cm-label"></div>
+            <div class="cm-label">Predicted positive</div>
+            <div class="cm-label">Predicted negative</div>
+            <div class="cm-label">Actual positive</div>
+            <div class="cm-cell correct"><span class="val" id="cellTP">0</span><span class="cap">True positive</span></div>
+            <div class="cm-cell wrong"><span class="val" id="cellFN">0</span><span class="cap">False negative</span></div>
+            <div class="cm-label">Actual negative</div>
+            <div class="cm-cell wrong"><span class="val" id="cellFP">0</span><span class="cap">False positive</span></div>
+            <div class="cm-cell correct"><span class="val" id="cellTN">0</span><span class="cap">True negative</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="trace-title" style="margin-bottom:10px;">Metrics</div>
+          <div class="ttr-stats" style="margin:0;">
+            <div class="stat"><div class="n" id="statPrecision">0.00</div><div class="l">precision</div></div>
+            <div class="stat"><div class="n" id="statRecall">0.00</div><div class="l">recall</div></div>
+            <div class="stat ratio"><div class="n" id="statF1">0.00</div><div class="l">F1 score</div></div>
+            <div class="stat"><div class="n" id="statAccuracy">0%</div><div class="l">accuracy</div></div>
+          </div>
+          <div class="formula">Precision = TP&divide;(TP+FP) &nbsp;&middot;&nbsp; Recall = TP&divide;(TP+FN) &nbsp;&middot;&nbsp; F1 = 2&middot;P&middot;R&divide;(P+R)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== IP ADDRESSING ===================== -->
+    <section class="module" id="mod-ipaddr">
+      <h2 class="mod-title">IP Addressing</h2>
+      <div class="mod-desc">An IPv4 address is 32 bits, written as four 8-bit octets. Click any bit below to flip it and watch the decimal address, class, and address type update live.</div>
+
+      <div class="ip-input-row">
+        <div class="field">
+          <label for="ipAddrInput">IP address</label>
+          <input type="text" id="ipAddrInput" value="192.168.1.10">
+        </div>
+        <button class="action ghost" id="ipRandom">Random address</button>
+      </div>
+
+      <div class="ip-octets-wrap" id="ipBitsWrap"></div>
+
+      <div class="ip-summary">
+        <div class="readout"><div class="n" id="ipClass">Class C</div><div class="l" id="ipClassDesc">—</div></div>
+        <div class="readout accent"><div class="n" id="ipType">—</div><div class="l">address type</div></div>
+      </div>
+      <div class="formula">Full binary: <b id="ipBinaryFull">—</b></div>
+      <div class="note">Class D (224–239) is reserved for multicast and Class E (240–255) for experimental use — neither is assigned to hosts. Classful addressing has mostly been replaced by CIDR (see the Subnetting module), but the ranges are still useful shorthand.</div>
+    </section>
+
+    <!-- ===================== SUBNETTING ===================== -->
+    <section class="module" id="mod-subnet">
+      <h2 class="mod-title">Subnetting</h2>
+      <div class="mod-desc">A CIDR prefix (e.g. <code>/24</code>) says how many of the 32 bits are "network" bits (teal) versus "host" bits (red). Drag the slider to see the subnet mask, network address, broadcast address, and usable host range recompute live.</div>
+
+      <div class="ip-input-row">
+        <div class="field">
+          <label for="subnetIpInput">IP address</label>
+          <input type="text" id="subnetIpInput" value="192.168.1.10">
+        </div>
+        <div class="slider-field" style="max-width:260px;">
+          <div class="slider-head"><span>CIDR prefix</span><b id="subnetPrefixVal">/24</b></div>
+          <input type="range" id="subnetPrefix" min="0" max="32" step="1" value="24">
+        </div>
+      </div>
+      <div class="prefix-chips" style="margin-bottom:20px;">
+        <button class="prefix-chip" data-prefix="8">/8</button>
+        <button class="prefix-chip" data-prefix="16">/16</button>
+        <button class="prefix-chip" data-prefix="24">/24</button>
+        <button class="prefix-chip" data-prefix="28">/28</button>
+        <button class="prefix-chip" data-prefix="30">/30</button>
+      </div>
+
+      <div class="bitbar-wrap" id="subnetBitBar"></div>
+      <div class="mini-legend" style="margin-top:-14px;margin-bottom:20px;">
+        <span><span class="swatch" style="background:var(--teal-soft)"></span> network bits</span>
+        <span><span class="swatch" style="background:var(--red-soft)"></span> host bits</span>
+      </div>
+
+      <div class="readout-row">
+        <div class="readout accent"><div class="n" id="subnetUsable">0</div><div class="l">usable host addresses</div></div>
+      </div>
+
+      <table class="subnet-table">
+        <thead><tr><th>Field</th><th>Decimal</th><th>Binary</th></tr></thead>
+        <tbody id="subnetTableBody"></tbody>
+      </table>
+    </section>
+
+  </main>
 </div>
 
 <script defer src="assets/js/canvas-utils.js"></script>
+<script defer src="assets/js/network-utils.js"></script>
 <script defer src="assets/js/levenshtein.js"></script>
 <script defer src="assets/js/ttr.js"></script>
 <script defer src="assets/js/linreg.js"></script>
@@ -346,6 +439,8 @@
 <script defer src="assets/js/kmeans.js"></script>
 <script defer src="assets/js/decision-boundary.js"></script>
 <script defer src="assets/js/confusion-matrix.js"></script>
+<script defer src="assets/js/ipaddress.js"></script>
+<script defer src="assets/js/subnet.js"></script>
 <script defer src="assets/js/main.js"></script>
 </body>
 </html>
