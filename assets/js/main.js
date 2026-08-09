@@ -41,4 +41,16 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof initIPAddressModule === 'function') initIPAddressModule();
   if (typeof initSubnetModule === 'function') initSubnetModule();
   if (typeof initEDAModule === 'function') initEDAModule();
+  if (typeof initGPIOModule === 'function') initGPIOModule();
+  if (typeof initRCCModule === 'function') initRCCModule();
+  if (typeof initTimerModule === 'function') initTimerModule();
+  if (typeof initUARTModule === 'function') initUARTModule();
+  if (typeof initSPII2CModule === 'function') initSPII2CModule();
+  if (typeof initNVICModule === 'function') initNVICModule();
+  if (typeof initStackFrameModule === 'function') initStackFrameModule();
+  if (typeof initMemMapModule === 'function') initMemMapModule();
+  if (typeof initBitbandModule === 'function') initBitbandModule();
+  if (typeof initADCModule === 'function') initADCModule();
+  if (typeof initDMAModule === 'function') initDMAModule();
+  if (typeof initRegExplorerModule === 'function') initRegExplorerModule();
 });

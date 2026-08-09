@@ -27,6 +27,18 @@ groups get added.
 | Networks | IP Addressing — click any of the 32 bits to flip it, see class (A–E) and address type (private/loopback/link-local/etc.) update live | `assets/js/ipaddress.js` |
 | Networks | Subnetting — drag a CIDR prefix slider, see subnet mask, network/broadcast address, and usable host range recompute live | `assets/js/subnet.js` |
 | Data Science | Exploratory Data Analysis — upload a CSV/Excel file (or load the built-in sample) for column types, missing values, summary stats, distributions, and a correlation heatmap. Includes a chart-type picker (histogram, box plot, line, bar, pie, scatter) | `assets/js/eda.js` |
+| Embedded (STM32F4) | GPIO Registers — configure MODER/OTYPER/OSPEEDR/PUPDR/ODR/IDR for one pin, see each register's hex value and this pin's exact bits highlighted | `assets/js/gpio.js` |
+| Embedded (STM32F4) | RCC Clock Tree — HSE/HSI source, PLL M/N/P/Q, AHB/APB prescalers → live SYSCLK/HCLK/PCLK with over-frequency warnings | `assets/js/rcc.js` |
+| Embedded (STM32F4) | Timer / PWM — PSC/ARR/CCR drive a live counter + PWM waveform | `assets/js/timer-pwm.js` |
+| Embedded (STM32F4) | UART Framing — baud/data bits/parity/stop bits rendered as a scaled bit-level frame waveform | `assets/js/uart.js` |
+| Embedded (STM32F4) | SPI / I2C Timing — CPOL/CPHA sampling-edge diagram for SPI; START/data/ACK/STOP diagram for I2C | `assets/js/spi-i2c.js` |
+| Embedded (STM32F4) | NVIC Preemption — tick-by-tick priority scheduler renders a Gantt-style interrupt timeline with response-latency table | `assets/js/nvic.js` |
+| Embedded (STM32F4) | Exception Stack Frame — step through the Cortex-M4's automatic register stacking on interrupt entry/exit | `assets/js/stackframe.js` |
+| Embedded (STM32F4) | Memory Map — clickable STM32F407 address regions (Flash/SRAM/AHB/APB/Cortex-M4 internal) with detail panel | `assets/js/memmap.js` |
+| Embedded (STM32F4) | Bit-Banding — computes the alias-region word address for any bit-band bit | `assets/js/bitband.js` |
+| Embedded (STM32F4) | ADC — analog voltage → N-bit digital code, with sample-time/clock-driven conversion timing | `assets/js/adc.js` |
+| Embedded (STM32F4) | DMA Transfer — step through source→destination transfers, NDTR countdown, circular vs. normal mode | `assets/js/dma.js` |
+| Embedded (STM32F4) | Register / Bit-Field Explorer — pick a register (RCC_CR, GPIOx_MODER, USART_CR1...), set fields, see the resulting hex | `assets/js/reg-explorer.js` |
 
 Every module shares one visual language (a "field notebook" theme with
 red-pen edit marks, teal/red for correct/incorrect or class A/B) so new
@@ -102,6 +114,19 @@ mylo-concept-lab/
 │   │   ├── ipaddress.js          # Networks — IP Addressing
 │   │   ├── subnet.js             # Networks — Subnetting
 │   │   ├── eda.js                # Data Science — Exploratory Data Analysis
+│   │   ├── embedded-utils.js     # shared hex/binary/bit-field helpers (Embedded modules)
+│   │   ├── gpio.js               # Embedded — GPIO Registers
+│   │   ├── rcc.js                # Embedded — RCC Clock Tree
+│   │   ├── timer-pwm.js          # Embedded — Timer / PWM
+│   │   ├── uart.js               # Embedded — UART Framing
+│   │   ├── spi-i2c.js            # Embedded — SPI / I2C Timing
+│   │   ├── nvic.js               # Embedded — NVIC Preemption
+│   │   ├── stackframe.js         # Embedded — Exception Stack Frame
+│   │   ├── memmap.js             # Embedded — Memory Map
+│   │   ├── bitband.js            # Embedded — Bit-Banding
+│   │   ├── adc.js                # Embedded — ADC
+│   │   ├── dma.js                # Embedded — DMA Transfer
+│   │   ├── reg-explorer.js       # Embedded — Register / Bit-Field Explorer
 │   │   └── main.js               # sidebar nav (groups + sub-tabs) + boot sequence
 │   └── img/                      # (empty — reserved for future modules)
 ├── .nojekyll

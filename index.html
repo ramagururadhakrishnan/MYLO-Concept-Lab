@@ -59,6 +59,24 @@
         </div>
       </div>
 
+      <div class="nav-group" data-group="embedded">
+        <button class="group-toggle">Embedded Systems (STM32F4) <span class="chev">&#9662;</span></button>
+        <div class="group-items">
+          <button class="side-tab" data-tab="gpio">GPIO Registers</button>
+          <button class="side-tab" data-tab="rcc">RCC Clock Tree</button>
+          <button class="side-tab" data-tab="timer">Timer / PWM</button>
+          <button class="side-tab" data-tab="uart">UART Framing</button>
+          <button class="side-tab" data-tab="spii2c">SPI / I2C Timing</button>
+          <button class="side-tab" data-tab="nvic">NVIC Preemption</button>
+          <button class="side-tab" data-tab="stackframe">Exception Stack Frame</button>
+          <button class="side-tab" data-tab="memmap">Memory Map</button>
+          <button class="side-tab" data-tab="bitband">Bit-Banding</button>
+          <button class="side-tab" data-tab="adc">ADC</button>
+          <button class="side-tab" data-tab="dma">DMA Transfer</button>
+          <button class="side-tab" data-tab="regexplorer">Register Explorer</button>
+        </div>
+      </div>
+
     </nav>
   </aside>
 
@@ -617,7 +635,488 @@
       </div>
     </section>
 
+
+    <!-- ===================== GPIO REGISTERS ===================== -->
+    <section class="module" id="mod-gpio">
+      <h2 class="mod-title">GPIO Registers</h2>
+      <div class="mod-desc">Every GPIO pin is controlled by a handful of 32-bit registers, 2 (or 1) bits per pin. Configure a pin below and watch each register's hex value — and the exact bits belonging to this pin — update live.</div>
+
+      <div class="gpio-visual">
+        <div class="gpio-led" id="gpioLed"></div>
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;" id="gpioPinLabel">PA5</div>
+          <div class="note" style="margin-top:2px;" id="gpioLedNote">LED reflects ODR (output) or IDR (input) for this pin.</div>
+        </div>
+      </div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:220px;">
+          <label for="gpioPinSelect">Pin</label>
+          <select id="gpioPinSelect"></select>
+        </div>
+      </div>
+
+      <div class="gpio-field-row">
+        <span class="gfr-label">MODER</span>
+        <span class="gfr-value" id="gpioModeLabel">Output</span>
+        <button class="action ghost" id="gpioModeBtn">Cycle</button>
+      </div>
+      <div class="gpio-field-row" id="gpioOtyperRow">
+        <span class="gfr-label">OTYPER</span>
+        <span class="gfr-value" id="gpioOtyperLabel">Push-pull</span>
+        <button class="action ghost" id="gpioOtyperBtn">Cycle</button>
+      </div>
+      <div class="gpio-field-row" id="gpioOspeedrRow">
+        <span class="gfr-label">OSPEEDR</span>
+        <span class="gfr-value" id="gpioOspeedrLabel">Low</span>
+        <button class="action ghost" id="gpioOspeedrBtn">Cycle</button>
+      </div>
+      <div class="gpio-field-row">
+        <span class="gfr-label">PUPDR</span>
+        <span class="gfr-value" id="gpioPupdrLabel">None</span>
+        <button class="action ghost" id="gpioPupdrBtn">Cycle</button>
+      </div>
+      <div class="gpio-field-row" id="gpioOdrRow">
+        <span class="gfr-label">ODR (output data)</span>
+        <span class="gfr-value" id="gpioOdrLabel">LOW (0)</span>
+        <button class="action ghost" id="gpioOdrBtn">Toggle</button>
+      </div>
+      <div class="gpio-field-row" id="gpioIdrRow">
+        <span class="gfr-label">IDR (simulated input)</span>
+        <span class="gfr-value" id="gpioIdrLabel">LOW (0)</span>
+        <button class="action ghost" id="gpioIdrBtn">Toggle</button>
+      </div>
+
+      <div class="trace-title" style="margin-top:22px;">GPIOA_MODER — 32-bit register (this pin's 2 bits highlighted)</div>
+      <div class="bitbar-wrap" id="gpioModerStrip"></div>
+      <div class="formula">GPIOA_MODER = <b id="gpioModerHex">—</b></div>
+
+      <div class="readout-row" style="margin-top:16px;">
+        <div class="readout"><div class="n" id="gpioOtyperHex">—</div><div class="l">OTYPER</div></div>
+        <div class="readout"><div class="n" id="gpioOspeedrHex">—</div><div class="l">OSPEEDR</div></div>
+        <div class="readout"><div class="n" id="gpioPupdrHex">—</div><div class="l">PUPDR</div></div>
+        <div class="readout"><div class="n" id="gpioOdrHex">—</div><div class="l">ODR</div></div>
+        <div class="readout accent"><div class="n" id="gpioIdrHex">—</div><div class="l">IDR</div></div>
+      </div>
+      <div class="note">All other pins are assumed at their reset value (0) here so the highlighted bits are easy to spot — in real firmware every pin's bits share these same registers.</div>
+    </section>
+
+    <!-- ===================== RCC CLOCK TREE ===================== -->
+    <section class="module" id="mod-rcc">
+      <h2 class="mod-title">RCC Clock Tree</h2>
+      <div class="mod-desc">SYSCLK on an F4 doesn't come from one crystal — it's built by a chain of dividers and a PLL. Adjust each stage and watch every downstream clock recompute, with warnings when a bus exceeds its documented maximum.</div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:180px;">
+          <label for="rccSource">Clock source</label>
+          <select id="rccSource">
+            <option value="16">HSI — 16 MHz</option>
+            <option value="8" selected>HSE — 8 MHz (typical board crystal)</option>
+            <option value="25">HSE — 25 MHz</option>
+          </select>
+        </div>
+        <button class="action ghost" id="rccPllToggle">PLL: ON</button>
+      </div>
+
+      <div class="control-strip">
+        <div class="slider-field">
+          <div class="slider-head"><span>PLL_M</span><b id="rccMVal">8</b></div>
+          <input type="range" id="rccM" min="2" max="63" step="1" value="8">
+        </div>
+        <div class="slider-field">
+          <div class="slider-head"><span>PLL_N</span><b id="rccNVal">336</b></div>
+          <input type="range" id="rccN" min="50" max="432" step="1" value="336">
+        </div>
+        <div class="field" style="max-width:110px;">
+          <label for="rccP">PLL_P</label>
+          <select id="rccP"><option value="2">2</option><option value="4" selected>4</option><option value="6">6</option><option value="8">8</option></select>
+        </div>
+        <div class="slider-field">
+          <div class="slider-head"><span>PLL_Q</span><b id="rccQVal">7</b></div>
+          <input type="range" id="rccQ" min="2" max="15" step="1" value="7">
+        </div>
+      </div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:120px;"><label for="rccAhb">AHB prescaler</label><select id="rccAhb"></select></div>
+        <div class="field" style="max-width:120px;"><label for="rccApb1">APB1 prescaler</label><select id="rccApb1"></select></div>
+        <div class="field" style="max-width:120px;"><label for="rccApb2">APB2 prescaler</label><select id="rccApb2"></select></div>
+      </div>
+
+      <div class="trace-title" style="margin-top:20px;">Clock tree flow</div>
+      <div class="clock-flow">
+        <div class="cf-box">Source<br><span class="cf-val" id="rccSrcOut">8.0 MHz</span></div>
+        <span class="cf-arrow">&rarr; /M &rarr;</span>
+        <div class="cf-box">VCO in<br><span class="cf-val" id="rccVcoIn">1.00 MHz</span></div>
+        <span class="cf-arrow">&rarr; &times;N &rarr;</span>
+        <div class="cf-box">VCO out<br><span class="cf-val" id="rccVcoOut">336 MHz</span></div>
+        <span class="cf-arrow">&rarr; /P &rarr;</span>
+        <div class="cf-box">SYSCLK<br><span class="cf-val" id="rccSysclk">168 MHz</span></div>
+        <span class="cf-arrow">&rarr; /AHB &rarr;</span>
+        <div class="cf-box">HCLK<br><span class="cf-val" id="rccHclk">168 MHz</span></div>
+      </div>
+      <div class="clock-flow">
+        <div class="cf-box">HCLK</div>
+        <span class="cf-arrow">&rarr; /APB1 &rarr;</span>
+        <div class="cf-box">PCLK1<br><span class="cf-val" id="rccPclk1">42 MHz</span></div>
+        <span class="cf-arrow">&rarr; TIMxCLK<br>(&times;2 if /≠1) &rarr;</span>
+        <div class="cf-box" id="rccTim1">84 MHz</div>
+      </div>
+      <div class="clock-flow">
+        <div class="cf-box">HCLK</div>
+        <span class="cf-arrow">&rarr; /APB2 &rarr;</span>
+        <div class="cf-box">PCLK2<br><span class="cf-val" id="rccPclk2">84 MHz</span></div>
+        <span class="cf-arrow">&rarr; TIMxCLK<br>(&times;2 if /≠1) &rarr;</span>
+        <div class="cf-box" id="rccTim2">84 MHz</div>
+      </div>
+      <div class="clock-flow">
+        <div class="cf-box">PLL_Q output<br><span class="cf-val" id="rccPllOut">48 MHz</span></div>
+        <span class="cf-arrow">used for USB OTG FS / SDIO (needs ≈48 MHz)</span>
+      </div>
+
+      <div class="rcc-warn-box" id="rccWarnings"></div>
+    </section>
+
+    <!-- ===================== TIMER / PWM ===================== -->
+    <section class="module" id="mod-timer">
+      <h2 class="mod-title">Timer / PWM</h2>
+      <div class="mod-desc">A timer's counter clock, output frequency, and duty cycle all fall out of three registers: PSC (prescaler), ARR (auto-reload), and CCR (compare value). Adjust them and watch the counter and PWM waveform respond.</div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:160px;">
+          <label for="timClk">Timer input clock</label>
+          <select id="timClk">
+            <option value="84" selected>84 MHz (APB1 timers, typical)</option>
+            <option value="168">168 MHz (APB2 timers, typical)</option>
+          </select>
+        </div>
+      </div>
+      <div class="control-strip">
+        <div class="slider-field">
+          <div class="slider-head"><span>PSC (prescaler)</span><b id="timPscVal">83</b></div>
+          <input type="range" id="timPsc" min="0" max="999" step="1" value="83">
+        </div>
+        <div class="slider-field">
+          <div class="slider-head"><span>ARR (auto-reload)</span><b id="timArrVal">999</b></div>
+          <input type="range" id="timArr" min="1" max="9999" step="1" value="999">
+        </div>
+        <div class="slider-field">
+          <div class="slider-head"><span>CCR (compare)</span><b id="timCcrVal">250</b></div>
+          <input type="range" id="timCcr" min="0" max="999" step="1" value="250">
+        </div>
+      </div>
+
+      <div class="readout-row">
+        <div class="readout"><div class="n" id="timCkCnt">1000.0 kHz</div><div class="l">counter clock</div></div>
+        <div class="readout accent"><div class="n" id="timFreq">1.00 kHz</div><div class="l">PWM frequency</div></div>
+        <div class="readout"><div class="n" id="timDuty">25.0%</div><div class="l">duty cycle</div></div>
+      </div>
+
+      <div class="canvas-box readonly">
+        <div class="trace-title">Counter (sawtooth), compare level (teal dashed), and resulting PWM output (red)</div>
+        <canvas id="timCanvas" width="640" height="280"></canvas>
+      </div>
+
+      <div class="math-box">
+        <div class="math-title">Key formulas</div>
+        <div class="math-row"><div class="eq">CK_CNT = <span class="frac"><span class="num">TIMxCLK</span><span class="den">PSC+1</span></span> &nbsp;&nbsp;&nbsp; f<sub>PWM</sub> = <span class="frac"><span class="num">CK_CNT</span><span class="den">ARR+1</span></span> &nbsp;&nbsp;&nbsp; Duty = <span class="frac"><span class="num">CCR</span><span class="den">ARR+1</span></span></div></div>
+      </div>
+    </section>
+
+    <!-- ===================== UART FRAMING ===================== -->
+    <section class="module" id="mod-uart">
+      <h2 class="mod-title">UART Framing</h2>
+      <div class="mod-desc">A UART byte is never just 8 bits on the wire — it's wrapped in a start bit, optional parity, and stop bit(s), each lasting exactly one bit-time at the configured baud rate. Configure a frame and see it drawn to scale.</div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:120px;">
+          <label for="uartByteInput">Byte (hex)</label>
+          <input type="text" id="uartByteInput" value="41" maxlength="2">
+        </div>
+        <div class="field" style="max-width:150px;">
+          <label for="uartBaud">Baud rate</label>
+          <select id="uartBaud">
+            <option value="9600">9600</option>
+            <option value="19200">19200</option>
+            <option value="38400">38400</option>
+            <option value="57600">57600</option>
+            <option value="115200" selected>115200</option>
+          </select>
+        </div>
+        <div class="field" style="max-width:110px;">
+          <label for="uartDataBits">Data bits</label>
+          <select id="uartDataBits"><option value="7">7</option><option value="8" selected>8</option><option value="9">9</option></select>
+        </div>
+        <div class="field" style="max-width:120px;">
+          <label for="uartParity">Parity</label>
+          <select id="uartParity"><option value="none" selected>None</option><option value="even">Even</option><option value="odd">Odd</option></select>
+        </div>
+        <div class="field" style="max-width:110px;">
+          <label for="uartStopBits">Stop bits</label>
+          <select id="uartStopBits"><option value="1" selected>1</option><option value="2">2</option></select>
+        </div>
+      </div>
+
+      <div class="readout-row">
+        <div class="readout"><div class="n" id="uartByteHex">0x41</div><div class="l">byte</div></div>
+        <div class="readout"><div class="n" id="uartBitTime">8.68 µs</div><div class="l">bit time</div></div>
+        <div class="readout accent"><div class="n" id="uartFrameTime">86.8 µs</div><div class="l">frame time</div></div>
+        <div class="readout"><div class="n" id="uartFrameBits">10.0</div><div class="l">bits / frame</div></div>
+      </div>
+      <p class="note" id="uartEffRate"></p>
+
+      <div class="canvas-box readonly">
+        <div class="trace-title">Frame waveform, drawn to scale</div>
+        <canvas id="uartCanvas" width="640" height="220"></canvas>
+      </div>
+    </section>
+
+    <!-- ===================== SPI / I2C TIMING ===================== -->
+    <section class="module" id="mod-spii2c">
+      <h2 class="mod-title">SPI / I2C Timing</h2>
+      <div class="mod-desc">SPI's four modes come from just two bits, CPOL and CPHA, which decide the clock's idle level and which edge data is sampled on. I2C instead uses START/STOP conditions and an ACK bit on a shared two-wire bus.</div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:140px;">
+          <label for="spii2cModeSelect">Protocol</label>
+          <select id="spii2cModeSelect"><option value="spi" selected>SPI</option><option value="i2c">I2C</option></select>
+        </div>
+        <div class="field" style="max-width:120px;">
+          <label for="spii2cByteInput">Byte (hex)</label>
+          <input type="text" id="spii2cByteInput" value="A5" maxlength="2">
+        </div>
+        <div class="btn-group" id="spiControls">
+          <div class="field" style="max-width:110px;">
+            <label for="spiCpol">CPOL</label>
+            <select id="spiCpol"><option value="0" selected>0</option><option value="1">1</option></select>
+          </div>
+          <div class="field" style="max-width:110px;">
+            <label for="spiCpha">CPHA</label>
+            <select id="spiCpha"><option value="0" selected>0</option><option value="1">1</option></select>
+          </div>
+        </div>
+      </div>
+      <p class="note" id="spii2cModeNote"></p>
+      <div class="readout-row">
+        <div class="readout accent"><div class="n" id="spii2cByteHex">0xA5</div><div class="l">byte on the wire</div></div>
+      </div>
+
+      <div class="canvas-box readonly">
+        <canvas id="spii2cCanvas" width="640" height="260"></canvas>
+      </div>
+    </section>
+
+    <!-- ===================== NVIC PREEMPTION ===================== -->
+    <section class="module" id="mod-nvic">
+      <h2 class="mod-title">NVIC Priority / Preemption</h2>
+      <div class="mod-desc">The Cortex-M NVIC always runs whichever ready interrupt has the numerically lowest priority value — including preempting a lower-priority ISR that's already running. Configure three interrupts and watch the resulting timeline.</div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:110px;"><label for="nvicIsr1Priority">ISR1 priority</label><select id="nvicIsr1Priority"><option value="0">0 (highest)</option><option value="1" selected>1</option><option value="2">2</option><option value="3">3 (lowest)</option></select></div>
+        <div class="slider-field"><div class="slider-head"><span>ISR1 fires at</span><b id="nvicIsr1FireVal">200ms</b></div><input type="range" id="nvicIsr1Fire" min="0" max="2900" step="50" value="200"></div>
+        <div class="slider-field"><div class="slider-head"><span>ISR1 duration</span><b id="nvicIsr1DurationVal">700ms</b></div><input type="range" id="nvicIsr1Duration" min="50" max="900" step="50" value="700"></div>
+      </div>
+      <div class="control-strip">
+        <div class="field" style="max-width:110px;"><label for="nvicIsr2Priority">ISR2 priority</label><select id="nvicIsr2Priority"><option value="0" selected>0 (highest)</option><option value="1">1</option><option value="2">2</option><option value="3">3 (lowest)</option></select></div>
+        <div class="slider-field"><div class="slider-head"><span>ISR2 fires at</span><b id="nvicIsr2FireVal">500ms</b></div><input type="range" id="nvicIsr2Fire" min="0" max="2900" step="50" value="500"></div>
+        <div class="slider-field"><div class="slider-head"><span>ISR2 duration</span><b id="nvicIsr2DurationVal">400ms</b></div><input type="range" id="nvicIsr2Duration" min="50" max="900" step="50" value="400"></div>
+      </div>
+      <div class="control-strip">
+        <div class="field" style="max-width:110px;"><label for="nvicIsr3Priority">ISR3 priority</label><select id="nvicIsr3Priority"><option value="0">0 (highest)</option><option value="1">1</option><option value="2" selected>2</option><option value="3">3 (lowest)</option></select></div>
+        <div class="slider-field"><div class="slider-head"><span>ISR3 fires at</span><b id="nvicIsr3FireVal">1200ms</b></div><input type="range" id="nvicIsr3Fire" min="0" max="2900" step="50" value="1200"></div>
+        <div class="slider-field"><div class="slider-head"><span>ISR3 duration</span><b id="nvicIsr3DurationVal">600ms</b></div><input type="range" id="nvicIsr3Duration" min="50" max="900" step="50" value="600"></div>
+      </div>
+
+      <div class="canvas-box readonly">
+        <div class="trace-title">Execution timeline (0–3000ms) — lower priority number always wins the CPU</div>
+        <canvas id="nvicCanvas" width="640" height="140"></canvas>
+        <div class="mini-legend" id="nvicLegend"></div>
+      </div>
+
+      <div class="table-scroll">
+        <table class="subnet-table">
+          <thead><tr><th>ISR</th><th>Priority</th><th>Fires at</th><th>Duration</th><th>Actually starts</th><th>Response latency</th></tr></thead>
+          <tbody id="nvicResultBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===================== EXCEPTION STACK FRAME ===================== -->
+    <section class="module" id="mod-stackframe">
+      <h2 class="mod-title">Exception Stack Frame</h2>
+      <div class="mod-desc">On exception entry, the Cortex-M4 automatically pushes 8 registers onto the stack (xPSR, PC, LR, R12, R3–R0) before your ISR ever runs, and pops them back on return. Set some register values and step through entry/exit.</div>
+
+      <div class="field-row">
+        <div class="field" style="max-width:160px;"><label for="stackSpInput">SP (before entry)</label><input type="text" id="stackSpInput"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="stackRegR0">R0</label><input type="text" id="stackRegR0"></div>
+        <div class="field"><label for="stackRegR1">R1</label><input type="text" id="stackRegR1"></div>
+        <div class="field"><label for="stackRegR2">R2</label><input type="text" id="stackRegR2"></div>
+        <div class="field"><label for="stackRegR3">R3</label><input type="text" id="stackRegR3"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="stackRegR12">R12</label><input type="text" id="stackRegR12"></div>
+        <div class="field"><label for="stackRegLR">LR</label><input type="text" id="stackRegLR"></div>
+        <div class="field"><label for="stackRegPC">PC</label><input type="text" id="stackRegPC"></div>
+        <div class="field"><label for="stackRegxPSR">xPSR</label><input type="text" id="stackRegxPSR"></div>
+      </div>
+
+      <div class="control-strip">
+        <button class="action" id="stackEnterBtn">Enter exception (push)</button>
+        <button class="action ghost" id="stackExitBtn">Return from exception (pop)</button>
+      </div>
+
+      <div class="readout-row">
+        <div class="readout accent"><div class="n" id="stackSpVal">—</div><div class="l">current SP</div></div>
+      </div>
+
+      <div class="trace-box" id="stackFrameWrap" style="font-family:'IBM Plex Mono',monospace;"></div>
+      <div class="note">Real firmware also has a choice of MSP vs PSP and, on entry, EXC_RETURN in LR tells the core which stack and mode to return to — simplified here to focus on the stacking order itself.</div>
+    </section>
+
+    <!-- ===================== MEMORY MAP ===================== -->
+    <section class="module" id="mod-memmap">
+      <h2 class="mod-title">Memory Map (STM32F407 reference)</h2>
+      <div class="mod-desc">Click a region to see its address range and what lives there. AHB1/AHB2 run faster and closer to the core; APB1/APB2 are the slower peripheral buses everything else hangs off.</div>
+
+      <div id="mmapList"></div>
+      <div id="mmapDetail" style="margin-top:16px;"></div>
+    </section>
+
+    <!-- ===================== BIT-BANDING ===================== -->
+    <section class="module" id="mod-bitband">
+      <h2 class="mod-title">Bit-Banding</h2>
+      <div class="mod-desc">The Cortex-M4 maps every individual bit in a 1MB bit-band region to its own 32-bit word in a separate 32MB alias region — write 1 or 0 to that alias word and only that one bit flips, atomically, no read-modify-write needed.</div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:220px;">
+          <label for="bitbandRegion">Bit-band region</label>
+          <select id="bitbandRegion">
+            <option value="periph" selected>Peripheral (0x4000 0000)</option>
+            <option value="sram">SRAM (0x2000 0000)</option>
+          </select>
+        </div>
+        <div class="field" style="max-width:180px;">
+          <label for="bitbandAddrInput">Target address</label>
+          <input type="text" id="bitbandAddrInput">
+        </div>
+        <div class="slider-field">
+          <div class="slider-head"><span>Bit number</span><b id="bitbandBitVal">5</b></div>
+          <input type="range" id="bitbandBitInput" min="0" max="31" step="1" value="5">
+        </div>
+      </div>
+
+      <div class="readout-row">
+        <div class="readout"><div class="n" id="bitbandBase">—</div><div class="l">region base</div></div>
+        <div class="readout"><div class="n" id="bitbandOffset">—</div><div class="l">byte offset</div></div>
+        <div class="readout"><div class="n" id="bitbandAliasBase">—</div><div class="l">alias base</div></div>
+        <div class="readout accent"><div class="n" id="bitbandAliasAddr">—</div><div class="l">alias word address</div></div>
+      </div>
+      <p class="note" id="bitbandValid"></p>
+
+      <div class="math-box">
+        <div class="math-title">The formula</div>
+        <div class="math-row"><div class="eq">alias_addr = alias_base + (byte_offset &times; 32) + (bit_number &times; 4)</div></div>
+        <div class="math-note">Each bit gets its own 32-bit slot in the alias region, which is why the alias region is 32&times; larger (32MB) than the bit-band region it covers (1MB).</div>
+      </div>
+    </section>
+
+    <!-- ===================== ADC ===================== -->
+    <section class="module" id="mod-adc">
+      <h2 class="mod-title">ADC</h2>
+      <div class="mod-desc">The ADC quantizes an analog input into one of 2<sup>N</sup> discrete codes across the reference voltage range. Slide the input voltage and see the resulting digital code and conversion timing.</div>
+
+      <div class="control-strip">
+        <div class="slider-field">
+          <div class="slider-head"><span>V<sub>in</sub></span><b id="adcVinValLabel"></b></div>
+          <input type="range" id="adcVin" min="0" max="3.3" step="0.001" value="1.65">
+        </div>
+        <div class="field" style="max-width:120px;"><label for="adcVref">V<sub>ref</sub></label><select id="adcVref"><option value="3.3" selected>3.3 V</option><option value="2.5">2.5 V</option><option value="3.0">3.0 V</option></select></div>
+        <div class="field" style="max-width:120px;"><label for="adcResolution">Resolution</label><select id="adcResolution"><option value="12" selected>12-bit</option><option value="10">10-bit</option><option value="8">8-bit</option><option value="6">6-bit</option></select></div>
+        <div class="field" style="max-width:150px;"><label for="adcSampleCycles">Sample time (cycles)</label><select id="adcSampleCycles"><option value="3">3</option><option value="15" selected>15</option><option value="56">56</option><option value="480">480</option></select></div>
+        <div class="field" style="max-width:130px;"><label for="adcClk">ADC clock</label><select id="adcClk"><option value="21" selected>21 MHz</option><option value="42">42 MHz</option></select></div>
+      </div>
+
+      <div class="readout-row">
+        <div class="readout"><div class="n" id="adcVinVal">1.650 V</div><div class="l">input voltage</div></div>
+        <div class="readout"><div class="n" id="adcVrefVal">3.30 V</div><div class="l">reference</div></div>
+        <div class="readout accent"><div class="n" id="adcCodeDec">2048</div><div class="l">digital code</div></div>
+        <div class="readout"><div class="n" id="adcCodeHex">0x800</div><div class="l">hex</div></div>
+      </div>
+      <div class="readout-row">
+        <div class="readout"><div class="n" id="adcCodeBin">100000000000</div><div class="l">binary</div></div>
+        <div class="readout"><div class="n" id="adcConvTime">1.286 µs</div><div class="l">conversion time</div></div>
+        <div class="readout"><div class="n" id="adcStepSize">0.806 mV</div><div class="l">step size (1 LSB)</div></div>
+      </div>
+
+      <div class="canvas-box readonly">
+        <div class="trace-title">Where V<sub>in</sub> falls across the quantization range</div>
+        <canvas id="adcCanvas" width="640" height="140"></canvas>
+      </div>
+    </section>
+
+    <!-- ===================== DMA TRANSFER ===================== -->
+    <section class="module" id="mod-dma">
+      <h2 class="mod-title">DMA Transfer</h2>
+      <div class="mod-desc">DMA moves data between memory and peripherals without the CPU touching each item. Step through a transfer and watch the source/destination addresses and the transfer counter (NDTR) update.</div>
+
+      <div class="field-row">
+        <div class="field" style="max-width:180px;"><label for="dmaSrcBaseInput">Source base address</label><input type="text" id="dmaSrcBaseInput"></div>
+        <div class="field" style="max-width:180px;"><label for="dmaDstBaseInput">Destination base address</label><input type="text" id="dmaDstBaseInput"></div>
+      </div>
+      <div class="control-strip">
+        <div class="slider-field"><div class="slider-head"><span>Transfer count</span><b id="dmaCountVal">8</b></div><input type="range" id="dmaCount" min="2" max="20" step="1" value="8"></div>
+        <div class="field" style="max-width:130px;"><label for="dmaItemSize">Item size</label><select id="dmaItemSize"><option value="1" selected>Byte</option><option value="2">Half-word</option><option value="4">Word</option></select></div>
+        <div class="field" style="max-width:130px;"><label for="dmaMode">Mode</label><select id="dmaMode"><option value="normal" selected>Normal</option><option value="circular">Circular</option></select></div>
+      </div>
+      <div class="control-strip">
+        <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;"><input type="checkbox" id="dmaSrcIncr"> Source address increments</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;"><input type="checkbox" id="dmaDstIncr" checked> Destination address increments</label>
+      </div>
+      <div class="control-strip">
+        <button class="action" id="dmaStepBtn">Step</button>
+        <button class="action ghost" id="dmaResetBtn">Reset</button>
+      </div>
+
+      <div class="readout-row">
+        <div class="readout accent"><div class="n" id="dmaNdtr">8</div><div class="l">NDTR (remaining)</div></div>
+        <div class="readout"><div class="n" id="dmaCurSrc">—</div><div class="l">current source addr</div></div>
+        <div class="readout"><div class="n" id="dmaCurDst">—</div><div class="l">current dest addr</div></div>
+      </div>
+      <p class="note" id="dmaStatus"></p>
+
+      <div class="trace-title">Source</div>
+      <div class="dma-cells" id="dmaSrcCells"></div>
+      <div class="trace-title">Destination</div>
+      <div class="dma-cells" id="dmaDstCells"></div>
+    </section>
+
+    <!-- ===================== REGISTER EXPLORER ===================== -->
+    <section class="module" id="mod-regexplorer">
+      <h2 class="mod-title">Register / Bit-Field Explorer</h2>
+      <div class="mod-desc">Pick any of these common registers, set its fields, and watch the resulting 32-bit hex value build up — the same way you'd compute a value to write in firmware before assigning it to the register.</div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:240px;">
+          <label for="regSelect">Register</label>
+          <select id="regSelect"></select>
+        </div>
+        <button class="action ghost" id="regResetBtn">Reset to default value</button>
+      </div>
+
+      <div id="regFieldsWrap"></div>
+
+      <div class="trace-title" style="margin-top:20px;">32-bit value</div>
+      <div class="bitbar-wrap" id="regBitStrip"></div>
+      <div class="readout-row">
+        <div class="readout accent"><div class="n" id="regHexVal">—</div><div class="l">current value</div></div>
+        <div class="readout"><div class="n" id="regResetVal">—</div><div class="l">reset value</div></div>
+      </div>
+    </section>
+
   </main>
+
 </div>
 
 <footer class="site-footer">Made with <span class="heart">&hearts;</span> — MYLO — L1 Concept Lab &copy; 2026. All rights reserved.</footer>
@@ -625,6 +1124,7 @@
 <script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script defer src="assets/js/canvas-utils.js"></script>
 <script defer src="assets/js/network-utils.js"></script>
+<script defer src="assets/js/embedded-utils.js"></script>
 <script defer src="assets/js/levenshtein.js"></script>
 <script defer src="assets/js/ttr.js"></script>
 <script defer src="assets/js/linreg.js"></script>
@@ -636,6 +1136,18 @@
 <script defer src="assets/js/ipaddress.js"></script>
 <script defer src="assets/js/subnet.js"></script>
 <script defer src="assets/js/eda.js"></script>
+<script defer src="assets/js/gpio.js"></script>
+<script defer src="assets/js/rcc.js"></script>
+<script defer src="assets/js/timer-pwm.js"></script>
+<script defer src="assets/js/uart.js"></script>
+<script defer src="assets/js/spi-i2c.js"></script>
+<script defer src="assets/js/nvic.js"></script>
+<script defer src="assets/js/stackframe.js"></script>
+<script defer src="assets/js/memmap.js"></script>
+<script defer src="assets/js/bitband.js"></script>
+<script defer src="assets/js/adc.js"></script>
+<script defer src="assets/js/dma.js"></script>
+<script defer src="assets/js/reg-explorer.js"></script>
 <script defer src="assets/js/main.js"></script>
 </body>
 </html>

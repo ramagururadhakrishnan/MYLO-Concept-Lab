@@ -915,6 +915,134 @@ input[type=file]::file-selector-button{
 table.corr-table th, table.corr-table td{text-align:center;}
 table.corr-table .st-label{text-align:left;}
 
+/* ---- Embedded Systems: shared bits ---- */
+.eq .dim, .dim{font-style:normal;color:var(--ink-soft);font-size:0.85em;}
+.rcc-bad{color:var(--red) !important;font-weight:700;}
+.rcc-warn-box{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  background:var(--paper);
+  border-left:4px solid var(--teal);
+  padding:10px 14px;
+  margin-top:14px;
+  line-height:1.8;
+}
+.rcc-warn-box-bad{border-left-color:var(--red);color:var(--red);}
+.clock-flow{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:6px;
+  margin:16px 0;
+}
+.clock-flow .cf-box{
+  background:var(--paper);
+  border:1px solid var(--rule);
+  padding:8px 12px;
+  text-align:center;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  min-width:80px;
+}
+.clock-flow .cf-box .cf-val{font-weight:700;color:var(--red);font-size:13px;}
+.clock-flow .cf-arrow{color:var(--ink-soft);font-size:16px;}
+
+/* GPIO LED */
+.gpio-visual{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  margin-bottom:20px;
+  padding:16px 20px;
+  background:var(--paper);
+  border:1px solid var(--rule);
+}
+.gpio-led{
+  width:26px;height:26px;
+  border-radius:50%;
+  background:#3a3a38;
+  border:2px solid var(--ink);
+  transition:background .15s ease, box-shadow .15s ease;
+}
+.gpio-field-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:8px 0;
+  border-bottom:1px solid var(--rule);
+  font-size:13px;
+}
+.gpio-field-row:last-child{border-bottom:none;}
+.gpio-field-row .gfr-label{color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.05em;}
+.gpio-field-row .gfr-value{font-weight:600;}
+
+/* Stack frame */
+.stack-row{
+  display:grid;
+  grid-template-columns:110px 1fr 110px;
+  gap:10px;
+  padding:8px 12px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12.5px;
+  border-bottom:1px solid var(--rule);
+}
+.stack-row.pushed{background:var(--teal-soft);color:#1c4642;}
+.stack-row.stack-sp-marker{color:var(--red);font-weight:600;border-bottom:none;}
+.stack-addr{color:var(--ink-soft);}
+.stack-row.pushed .stack-addr{color:#1c4642;opacity:.75;}
+
+/* Memory map */
+.mmap-row{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  padding:10px 14px;
+  border:1px solid var(--rule);
+  margin-bottom:4px;
+  cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12.5px;
+  background:var(--paper);
+}
+.mmap-row:hover{border-color:var(--ink);}
+.mmap-row.active{background:var(--red-soft);border-color:var(--red);color:#5c1f16;}
+.mmap-range{color:var(--ink-soft);}
+.mmap-row.active .mmap-range{color:#5c1f16;}
+
+/* DMA cells */
+.dma-cells{display:flex;flex-wrap:wrap;gap:4px;margin:10px 0;}
+.dma-cell{
+  width:32px;height:32px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--rule);
+  background:var(--paper);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  color:var(--ink-soft);
+}
+.dma-cell.active{background:var(--red);color:var(--card);border-color:var(--red);}
+.dma-cell.done{background:var(--teal-soft);color:#1c4642;border-color:var(--teal);}
+
+/* Register explorer */
+.reg-field-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:7px 0;
+  border-bottom:1px solid var(--rule);
+  font-size:13px;
+}
+.reg-field-row:last-child{border-bottom:none;}
+.reg-field-name{font-family:'IBM Plex Mono',monospace;}
+.reg-field-control select, .reg-field-control input{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  padding:4px 6px;
+  width:80px;
+}
+
 /* Accessibility: visible keyboard focus everywhere */
 a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
   outline:2px solid var(--teal);
