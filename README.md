@@ -39,6 +39,16 @@ groups get added.
 | Embedded (STM32F4) | ADC — analog voltage → N-bit digital code, with sample-time/clock-driven conversion timing | `assets/js/adc.js` |
 | Embedded (STM32F4) | DMA Transfer — step through source→destination transfers, NDTR countdown, circular vs. normal mode | `assets/js/dma.js` |
 | Embedded (STM32F4) | Register / Bit-Field Explorer — pick a register (RCC_CR, GPIOx_MODER, USART_CR1...), set fields, see the resulting hex | `assets/js/reg-explorer.js` |
+| Theory of Computation | Deterministic FA (DFA) — preset examples, editable transition table, string simulation with step trace and live diagram highlighting | `assets/js/dfa.js` |
+| Theory of Computation | Non-Deterministic FA (NFA) — epsilon transitions, simulation tracks the whole set of current states at once | `assets/js/nfa.js` |
+| Theory of Computation | NFA &harr; DFA Equivalence — runs subset construction on the currently-loaded NFA, shows the worklist trace and both diagrams | `assets/js/nfa-to-dfa.js` |
+| Theory of Computation | FSM Minimization — Moore's partition-refinement algorithm, round-by-round trace, before/after diagrams | `assets/js/minimize.js` |
+| Theory of Computation | Regular Expressions — real regex parser + Thompson construction to an NFA, live string testing, parse-tree view | `assets/js/regex.js` |
+| Theory of Computation | Regular Languages (Pumping Lemma) — interactive split of w=xyz contrasting a non-regular and a regular language | `assets/js/reglang.js` |
+| Theory of Computation | Properties / Closure — product construction demo for union, intersection, and complement between two DFAs | `assets/js/properties.js` |
+| Theory of Computation | Real-World FA Design — curated gallery (vending machine, identifier validator, mod-3 checker, traffic light, password screener) with the state-meaning explained for each | `assets/js/fa-examples.js` |
+
+`assets/js/fa-utils.js` is the shared engine behind every Theory of Computation module: the SVG state-diagram renderer, NFA/DFA simulation (epsilon-closure included), subset construction, DFA minimization, a real regex parser + Thompson construction, and product construction for closure properties. All of it was written and verified against known-correct test cases (see the module's own header comment) rather than assumed correct from the algorithm description alone.
 
 Every module shares one visual language (a "field notebook" theme with
 red-pen edit marks, teal/red for correct/incorrect or class A/B) so new
@@ -127,6 +137,15 @@ mylo-concept-lab/
 │   │   ├── adc.js                # Embedded — ADC
 │   │   ├── dma.js                # Embedded — DMA Transfer
 │   │   ├── reg-explorer.js       # Embedded — Register / Bit-Field Explorer
+│   │   ├── fa-utils.js           # shared automata engine (Theory of Computation modules)
+│   │   ├── dfa.js                # ToC — Deterministic FA
+│   │   ├── nfa.js                # ToC — Non-Deterministic FA
+│   │   ├── nfa-to-dfa.js         # ToC — NFA/DFA equivalence (subset construction)
+│   │   ├── minimize.js           # ToC — FSM minimization
+│   │   ├── regex.js              # ToC — Regular expressions (Thompson construction)
+│   │   ├── reglang.js            # ToC — Regular languages / pumping lemma
+│   │   ├── properties.js         # ToC — Closure properties (product construction)
+│   │   ├── fa-examples.js        # ToC — Real-world FA design gallery
 │   │   └── main.js               # sidebar nav (groups + sub-tabs) + boot sequence
 │   └── img/                      # (empty — reserved for future modules)
 ├── .nojekyll

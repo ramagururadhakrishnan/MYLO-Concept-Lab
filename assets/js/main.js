@@ -53,4 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof initADCModule === 'function') initADCModule();
   if (typeof initDMAModule === 'function') initDMAModule();
   if (typeof initRegExplorerModule === 'function') initRegExplorerModule();
+  if (typeof initDFAModule === 'function') initDFAModule();
+  if (typeof initNFAModule === 'function') initNFAModule();
+  if (typeof initN2DModule === 'function') initN2DModule();
+  if (typeof initMinimizeModule === 'function') initMinimizeModule();
+  if (typeof initRegexModule === 'function') initRegexModule();
+  if (typeof initPumpingModule === 'function') initPumpingModule();
+  if (typeof initPropertiesModule === 'function') initPropertiesModule();
+  if (typeof initFAExamplesModule === 'function') initFAExamplesModule();
 });

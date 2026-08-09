@@ -77,6 +77,20 @@
         </div>
       </div>
 
+      <div class="nav-group" data-group="toc">
+        <button class="group-toggle">Theory of Computation <span class="chev">&#9662;</span></button>
+        <div class="group-items">
+          <button class="side-tab" data-tab="dfa">Deterministic FA (DFA)</button>
+          <button class="side-tab" data-tab="nfa">Non-Deterministic FA (NFA)</button>
+          <button class="side-tab" data-tab="nfa2dfa">NFA &harr; DFA Equivalence</button>
+          <button class="side-tab" data-tab="minimize">FSM Minimization</button>
+          <button class="side-tab" data-tab="regex">Regular Expressions</button>
+          <button class="side-tab" data-tab="reglang">Regular Languages (Pumping Lemma)</button>
+          <button class="side-tab" data-tab="properties">Properties / Closure</button>
+          <button class="side-tab" data-tab="faexamples">Real-World FA Design</button>
+        </div>
+      </div>
+
     </nav>
   </aside>
 
@@ -1115,7 +1129,232 @@
       </div>
     </section>
 
+
+    <!-- ===================== DFA ===================== -->
+    <section class="module" id="mod-dfa">
+      <h2 class="mod-title">Deterministic Finite Automaton (DFA)</h2>
+      <div class="mod-desc">In a DFA, every state has exactly one transition per input symbol — the next state is always uniquely determined. Pick a preset, edit the transition table if you like, then run a string through it.</div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:320px;"><label for="dfaPreset">Example</label><select id="dfaPreset"></select></div>
+      </div>
+
+      <div class="fa-columns">
+        <div class="fa-svg-box"><svg id="dfaSvg"></svg></div>
+        <div>
+          <div class="trace-title">Transition table (start &rarr;, accept *)</div>
+          <div id="dfaTableWrap"></div>
+        </div>
+      </div>
+
+      <div class="field-row" style="margin-top:20px;">
+        <div class="field"><label for="dfaInput">Test string</label><input type="text" id="dfaInput" value="1010"></div>
+        <button class="action" id="dfaRunBtn">Run</button>
+      </div>
+      <div class="fa-result" id="dfaResult"></div>
+      <div class="trace-title">Step trace (set notation, since a DFA's "set" always has one element)</div>
+      <div id="dfaTrace"></div>
+    </section>
+
+    <!-- ===================== NFA ===================== -->
+    <section class="module" id="mod-nfa">
+      <h2 class="mod-title">Non-Deterministic Finite Automaton (NFA)</h2>
+      <div class="mod-desc">An NFA can have multiple transitions (or none) for a symbol from a given state, plus optional ε (epsilon) moves that consume no input. Simulation tracks the entire SET of states the machine could be in at once.</div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:320px;"><label for="nfaPreset">Example</label><select id="nfaPreset"></select></div>
+      </div>
+
+      <div class="fa-columns">
+        <div class="fa-svg-box"><svg id="nfaSvg"></svg></div>
+        <div>
+          <div class="trace-title">Transition table — comma-separated target states, ε column for epsilon moves</div>
+          <div id="nfaTableWrap"></div>
+        </div>
+      </div>
+
+      <div class="field-row" style="margin-top:20px;">
+        <div class="field"><label for="nfaInput">Test string</label><input type="text" id="nfaInput" value="1001"></div>
+        <button class="action" id="nfaRunBtn">Run</button>
+      </div>
+      <div class="fa-result" id="nfaResult"></div>
+      <div class="readout-row"><div class="readout accent"><div class="n" id="nfaCurrentStates">—</div><div class="l">final state set</div></div></div>
+      <div class="trace-title">Step trace</div>
+      <div id="nfaTrace"></div>
+    </section>
+
+    <!-- ===================== NFA <-> DFA EQUIVALENCE ===================== -->
+    <section class="module" id="mod-nfa2dfa">
+      <h2 class="mod-title">NFA &harr; DFA Equivalence (Subset Construction)</h2>
+      <div class="mod-desc">Every NFA has an equivalent DFA — one where each DFA state is a SET of NFA states. This runs the subset construction on whatever NFA is currently loaded in the NFA tab, so switch presets there and come back to see it change.</div>
+
+      <div class="control-strip">
+        <div class="field"><label for="n2dTestInput">Test string (checked against both)</label><input type="text" id="n2dTestInput" value="1001"></div>
+        <button class="action" id="n2dRunBtn">Re-run construction</button>
+      </div>
+      <p class="note" id="n2dAgree"></p>
+
+      <div class="fa-columns">
+        <div>
+          <div class="trace-title">NFA (<span id="n2dNfaStateCount">—</span> states)</div>
+          <div class="fa-svg-box"><svg id="n2dNfaSvg"></svg></div>
+        </div>
+        <div>
+          <div class="trace-title">Equivalent DFA (<span id="n2dDfaStateCount">—</span> reachable subsets)</div>
+          <div class="fa-svg-box"><svg id="n2dDfaSvg"></svg></div>
+        </div>
+      </div>
+
+      <div class="trace-title" style="margin-top:20px;">Worklist trace — each new subset discovered, and where it goes on each symbol</div>
+      <div id="n2dSteps"></div>
+    </section>
+
+    <!-- ===================== MINIMIZATION ===================== -->
+    <section class="module" id="mod-minimize">
+      <h2 class="mod-title">Minimization of a Finite State Machine</h2>
+      <div class="mod-desc">Partition refinement (Moore's algorithm): start by splitting states into accepting vs. non-accepting, then keep splitting any group whose members transition to different groups on some symbol — until nothing changes.</div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:280px;"><label for="minPreset">Example</label><select id="minPreset"></select></div>
+      </div>
+
+      <div class="trace-title">Transition table (editable)</div>
+      <div id="minTableWrap"></div>
+      <div class="control-strip" style="margin-top:14px;">
+        <button class="action" id="minRunBtn">Minimize</button>
+      </div>
+
+      <div class="fa-columns" style="margin-top:16px;">
+        <div>
+          <div class="trace-title">Original (<span id="minOrigCount">—</span> states)</div>
+          <div class="fa-svg-box"><svg id="minOrigSvg"></svg></div>
+        </div>
+        <div>
+          <div class="trace-title">Minimized (<span id="minResultCount">—</span> states)</div>
+          <div class="fa-svg-box"><svg id="minResultSvg"></svg></div>
+        </div>
+      </div>
+
+      <div class="trace-title" style="margin-top:20px;">Partition refinement, round by round</div>
+      <div id="minRounds"></div>
+    </section>
+
+    <!-- ===================== REGULAR EXPRESSIONS ===================== -->
+    <section class="module" id="mod-regex">
+      <h2 class="mod-title">Regular Expressions</h2>
+      <div class="mod-desc">Every regular expression can be mechanically compiled into an NFA (Thompson's construction) — that's the bridge between the "pattern" way of describing a language and the "machine" way. Supports concatenation, <code>|</code>, <code>*</code>, <code>+</code>, <code>?</code>, and parentheses.</div>
+
+      <div class="field-row">
+        <div class="field"><label for="regexPattern">Regular expression</label><input type="text" id="regexPattern" value="(a|b)*abb"></div>
+        <div class="field"><label for="regexTestInput">Test string</label><input type="text" id="regexTestInput" value="aababb"></div>
+        <button class="action" id="regexRunBtn">Build &amp; test</button>
+      </div>
+      <p class="note" id="regexStatus"></p>
+      <div class="fa-result" id="regexResult"></div>
+
+      <div class="fa-columns">
+        <div>
+          <div class="trace-title">NFA from Thompson's construction (<span id="regexStateCount">—</span> states)</div>
+          <div class="fa-svg-box"><svg id="regexSvg"></svg></div>
+        </div>
+        <div>
+          <div class="trace-title">Parse tree</div>
+          <div class="trace-box ast-tree" id="regexAST"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== REGULAR LANGUAGES / PUMPING LEMMA ===================== -->
+    <section class="module" id="mod-reglang">
+      <h2 class="mod-title">Regular Languages — the Pumping Lemma</h2>
+      <div class="mod-desc">The pumping lemma says: for any regular language, every string longer than some length p can be split w = xyz with |xy|&le;p, |y|&ge;1, such that xy<sup>k</sup>z stays in the language for every k&ge;0. Try to break {aⁿbⁿ}, then contrast it with a genuinely regular language.</div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:280px;">
+          <label for="pumpLang">Language</label>
+          <select id="pumpLang">
+            <option value="anbn" selected>{aⁿbⁿ : n≥0} — NOT regular</option>
+            <option value="abstar">(ab)+ — regular</option>
+          </select>
+        </div>
+      </div>
+      <div class="control-strip">
+        <div class="slider-field"><div class="slider-head"><span>p (pumping length)</span><b id="pumpPVal">4</b></div><input type="range" id="pumpP" min="1" max="8" step="1" value="4"></div>
+        <div class="slider-field"><div class="slider-head"><span>y start (within xy)</span><b></b></div><input type="range" id="pumpYStart" min="0" max="8" step="1" value="0"></div>
+        <div class="slider-field"><div class="slider-head"><span>y length</span><b></b></div><input type="range" id="pumpYLen" min="1" max="8" step="1" value="1"></div>
+        <div class="slider-field"><div class="slider-head"><span>k (times to pump)</span><b id="pumpKVal">2</b></div><input type="range" id="pumpK" min="0" max="4" step="1" value="2"></div>
+      </div>
+
+      <div class="trace-box">
+        <div id="pumpWord" style="font-family:'IBM Plex Mono',monospace;font-size:15px;margin-bottom:8px;"></div>
+        <div class="note" id="pumpConstraint"></div>
+        <div id="pumpedWord" style="font-family:'IBM Plex Mono',monospace;font-size:15px;margin-top:12px;"></div>
+      </div>
+      <p class="note" id="pumpVerdict" style="margin-top:14px;"></p>
+    </section>
+
+    <!-- ===================== PROPERTIES / CLOSURE ===================== -->
+    <section class="module" id="mod-properties">
+      <h2 class="mod-title">Properties of Regular Languages</h2>
+      <div class="mod-desc">Regular languages are closed under union, intersection, and complement (among others) — meaning combining two regular languages this way always produces another regular language. This builds the combined automaton via product construction so you can see it, not just take it on faith.</div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:200px;">
+          <label for="propOp">Operation</label>
+          <select id="propOp">
+            <option value="union" selected>A &cup; B (union)</option>
+            <option value="intersection">A &cap; B (intersection)</option>
+            <option value="complement">complement of A</option>
+          </select>
+        </div>
+        <div class="field"><label for="propTestInput">Test string</label><input type="text" id="propTestInput" value="110"></div>
+        <button class="action" id="propRunBtn">Run</button>
+      </div>
+      <p class="note" id="propTestOut"></p>
+
+      <div class="fa-columns">
+        <div>
+          <div class="trace-title">A — odd number of 1s</div>
+          <div class="fa-svg-box"><svg id="propASvg"></svg></div>
+        </div>
+        <div>
+          <div class="trace-title">B — ends with a 0</div>
+          <div class="fa-svg-box"><svg id="propBSvg"></svg></div>
+        </div>
+      </div>
+      <div class="trace-title" style="margin-top:20px;"><span id="propResultLabel">Result</span> (<span id="propResultCount">—</span> reachable states)</div>
+      <div class="fa-svg-box"><svg id="propResultSvg"></svg></div>
+    </section>
+
+    <!-- ===================== REAL-WORLD FA DESIGN ===================== -->
+    <section class="module" id="mod-faexamples">
+      <h2 class="mod-title">Designing Finite Automata for Real-World Problems</h2>
+      <div class="mod-desc">The hard part of FA design is usually deciding what a state MEANS — a remaining balance, a remainder, a "have I seen the pattern yet" flag. These five examples show that mapping explicitly.</div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:420px;"><label for="faExPreset">Problem</label><select id="faExPreset"></select></div>
+      </div>
+      <p class="note" id="faExBlurb"></p>
+
+      <div class="fa-columns">
+        <div class="fa-svg-box"><svg id="faExSvg"></svg></div>
+        <div>
+          <div class="trace-title">Transition table (start &rarr;, accept *)</div>
+          <div id="faExTableWrap"></div>
+        </div>
+      </div>
+
+      <div class="field-row" style="margin-top:20px;">
+        <div class="field"><label for="faExInput">Test input (comma-separated tokens if the alphabet isn't single characters, e.g. N,N,D)</label><input type="text" id="faExInput" value="N,D"></div>
+        <button class="action" id="faExRunBtn">Run</button>
+      </div>
+      <div class="fa-result" id="faExResult"></div>
+      <div class="trace-title">Step trace</div>
+      <div id="faExTrace"></div>
+    </section>
+
   </main>
+
 
 </div>
 
@@ -1148,6 +1387,15 @@
 <script defer src="assets/js/adc.js"></script>
 <script defer src="assets/js/dma.js"></script>
 <script defer src="assets/js/reg-explorer.js"></script>
+<script defer src="assets/js/fa-utils.js"></script>
+<script defer src="assets/js/dfa.js"></script>
+<script defer src="assets/js/nfa.js"></script>
+<script defer src="assets/js/nfa-to-dfa.js"></script>
+<script defer src="assets/js/minimize.js"></script>
+<script defer src="assets/js/regex.js"></script>
+<script defer src="assets/js/reglang.js"></script>
+<script defer src="assets/js/properties.js"></script>
+<script defer src="assets/js/fa-examples.js"></script>
 <script defer src="assets/js/main.js"></script>
 </body>
 </html>
