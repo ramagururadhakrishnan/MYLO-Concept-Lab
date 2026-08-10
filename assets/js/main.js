@@ -40,6 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof initConfusionMatrixModule === 'function') initConfusionMatrixModule();
   if (typeof initIPAddressModule === 'function') initIPAddressModule();
   if (typeof initSubnetModule === 'function') initSubnetModule();
+  if (typeof initNgramModule === 'function') initNgramModule();
+  if (typeof initCosineModule === 'function') initCosineModule();
+  if (typeof initTfidfModule === 'function') initTfidfModule();
+  if (typeof initBigramModule === 'function') initBigramModule();
+  if (typeof initRoutingModule === 'function') initRoutingModule();
+  if (typeof initDNSModule === 'function') initDNSModule();
+  if (typeof initOSIModule === 'function') initOSIModule();
   if (typeof initEDAModule === 'function') initEDAModule();
   if (typeof initGPIOModule === 'function') initGPIOModule();
   if (typeof initRCCModule === 'function') initRCCModule();

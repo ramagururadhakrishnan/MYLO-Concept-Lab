@@ -1092,6 +1092,25 @@ table.fa-table select, table.fa-table input[type=text]{
 .pump-z{color:var(--ink-soft);}
 .pump-bad{color:var(--red);font-weight:600;}
 
+/* ---- Routing / DNS / OSI ---- */
+tr.routing-match td{background:var(--teal-soft);}
+tr.routing-winner td{background:var(--red-soft);font-weight:700;}
+.dns-active{background:var(--red) !important;color:var(--card) !important;border-color:var(--red) !important;}
+.osi-encap-box{
+  border:2px solid;
+  border-radius:4px;
+  padding:16px;
+  display:inline-block;
+}
+.osi-encap-label{
+  display:block;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10.5px;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  margin-bottom:8px;
+}
+
 /* Accessibility: visible keyboard focus everywhere */
 a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
   outline:2px solid var(--teal);

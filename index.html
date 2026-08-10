@@ -29,6 +29,10 @@
         <div class="group-items">
           <button class="side-tab active" data-tab="lev">Levenshtein Distance</button>
           <button class="side-tab" data-tab="ttr">Type-Token Ratio</button>
+          <button class="side-tab" data-tab="ngram">N-gram Overlap</button>
+          <button class="side-tab" data-tab="cosine">Cosine Similarity</button>
+          <button class="side-tab" data-tab="tfidf">TF-IDF</button>
+          <button class="side-tab" data-tab="bigram">Bigram Language Model</button>
         </div>
       </div>
 
@@ -49,6 +53,9 @@
         <div class="group-items">
           <button class="side-tab" data-tab="ipaddr">IP Addressing</button>
           <button class="side-tab" data-tab="subnet">Subnetting</button>
+          <button class="side-tab" data-tab="routing">Routing Tables</button>
+          <button class="side-tab" data-tab="dns">DNS Resolution</button>
+          <button class="side-tab" data-tab="osi">OSI Model</button>
         </div>
       </div>
 
@@ -188,6 +195,110 @@
       <div class="formula">TTR = <b>unique types</b> &divide; <b>total tokens</b> — e.g. <span id="formulaEcho"></span></div>
       <div class="note">Longer texts naturally push TTR down (common words like "the" repeat), so TTR is best used to compare passages of similar length.</div>
     </section>
+
+    <!-- ===================== N-GRAM OVERLAP ===================== -->
+    <section class="module" id="mod-ngram">
+      <h2 class="mod-title">N-gram Overlap</h2>
+      <div class="mod-desc">Break two texts into overlapping n-length chunks (n-grams) and measure how much they share. Jaccard similarity = shared &divide; total distinct n-grams; overlap coefficient = shared &divide; the smaller set's size.</div>
+
+      <div class="control-strip">
+        <div class="slider-field"><div class="slider-head"><span>n</span><b id="ngramNVal">2</b></div><input type="range" id="ngramN" min="1" max="4" step="1" value="2"></div>
+        <div class="field" style="max-width:140px;"><label for="ngramMode">Unit</label><select id="ngramMode"><option value="word" selected>Word</option><option value="char">Character</option></select></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="ngramTextA">Text A</label><textarea id="ngramTextA" rows="2"></textarea></div>
+        <div class="field"><label for="ngramTextB">Text B</label><textarea id="ngramTextB" rows="2"></textarea></div>
+      </div>
+
+      <div class="readout-row">
+        <div class="readout accent"><div class="n" id="ngramJaccard">0.000</div><div class="l">Jaccard similarity</div></div>
+        <div class="readout"><div class="n" id="ngramOverlap">0.000</div><div class="l">overlap coefficient</div></div>
+        <div class="readout"><div class="n" id="ngramShared">0</div><div class="l">shared n-grams</div></div>
+        <div class="readout"><div class="n" id="ngramCountA">0</div><div class="l">unique n-grams in A</div></div>
+        <div class="readout"><div class="n" id="ngramCountB">0</div><div class="l">unique n-grams in B</div></div>
+      </div>
+
+      <div class="fa-columns">
+        <div><div class="trace-title">A's n-grams (teal = shared with B)</div><div class="token-field" id="ngramListA"></div></div>
+        <div><div class="trace-title">B's n-grams (teal = shared with A)</div><div class="token-field" id="ngramListB"></div></div>
+      </div>
+    </section>
+
+    <!-- ===================== COSINE SIMILARITY ===================== -->
+    <section class="module" id="mod-cosine">
+      <h2 class="mod-title">Cosine Similarity</h2>
+      <div class="mod-desc">Each text becomes a term-frequency vector over the shared vocabulary. Cosine similarity measures the angle between those two vectors — 1.0 means identical direction (same word proportions), 0 means no shared words at all.</div>
+
+      <div class="field-row">
+        <div class="field"><label for="cosineTextA">Text A</label><textarea id="cosineTextA" rows="2"></textarea></div>
+        <div class="field"><label for="cosineTextB">Text B</label><textarea id="cosineTextB" rows="2"></textarea></div>
+      </div>
+
+      <div class="readout-row">
+        <div class="readout accent"><div class="n" id="cosineResult">0.0000</div><div class="l">cosine similarity</div></div>
+        <div class="readout"><div class="n" id="cosineDot">0</div><div class="l">dot product</div></div>
+        <div class="readout"><div class="n" id="cosineMagA">0.000</div><div class="l">‖A‖</div></div>
+        <div class="readout"><div class="n" id="cosineMagB">0.000</div><div class="l">‖B‖</div></div>
+      </div>
+
+      <div class="math-box">
+        <div class="math-title">The formula</div>
+        <div class="math-row"><div class="eq">cos(&theta;) = <span class="frac"><span class="num">A &middot; B</span><span class="den">‖A‖ ‖B‖</span></span></div></div>
+      </div>
+
+      <div class="trace-title">Term vectors</div>
+      <div class="table-scroll">
+        <table class="subnet-table"><thead><tr><th>Term</th><th>Freq in A</th><th>Freq in B</th><th>Product</th></tr></thead><tbody id="cosineTableBody"></tbody></table>
+      </div>
+    </section>
+
+    <!-- ===================== TF-IDF ===================== -->
+    <section class="module" id="mod-tfidf">
+      <h2 class="mod-title">TF-IDF</h2>
+      <div class="mod-desc">Term Frequency &times; Inverse Document Frequency scores a word highly when it's common in one document but rare across the whole corpus — that's what separates a document's distinctive words from generic ones like "the".</div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:220px;"><label for="tfidfDocSelect">Inspect document</label><select id="tfidfDocSelect"></select></div>
+        <div class="readout"><div class="n" id="tfidfDocCount">4</div><div class="l">documents in corpus (N)</div></div>
+      </div>
+
+      <div class="trace-title">Corpus (editable)</div>
+      <div class="field-row" id="tfidfDocsWrap" style="align-items:flex-start;"></div>
+
+      <div class="math-box">
+        <div class="math-title">The formula</div>
+        <div class="math-row"><div class="eq">TF-IDF(t,d) = <span class="frac"><span class="num">count(t,d)</span><span class="den">terms in d</span></span> &times; log<span class="frac"><span class="num">N</span><span class="den">df(t)</span></span></div></div>
+      </div>
+
+      <div class="trace-title">Terms in the selected document, ranked by TF-IDF</div>
+      <div class="table-scroll">
+        <table class="subnet-table"><thead><tr><th>Term</th><th>TF</th><th>DF</th><th>IDF</th><th>TF-IDF</th></tr></thead><tbody id="tfidfTableBody"></tbody></table>
+      </div>
+    </section>
+
+    <!-- ===================== BIGRAM LANGUAGE MODEL ===================== -->
+    <section class="module" id="mod-bigram">
+      <h2 class="mod-title">Tiny Bigram Language Model</h2>
+      <div class="mod-desc">A bigram model just counts, for every word, what word came next across some training text — then turns those counts into probabilities. It's the simplest possible language model, and the same core idea (predict the next token from context) scales up to GPT-style models.</div>
+
+      <div class="field-row">
+        <div class="field" style="flex:1 1 100%;"><label for="bigramText">Training text</label><textarea id="bigramText" rows="3"></textarea></div>
+      </div>
+      <div class="readout-row"><div class="readout"><div class="n" id="bigramVocabSize">0</div><div class="l">distinct words seen as a "current word"</div></div></div>
+
+      <div class="control-strip">
+        <div class="field" style="max-width:160px;"><label for="bigramSeed">Seed word</label><input type="text" id="bigramSeed" value="the"></div>
+        <div class="slider-field"><div class="slider-head"><span>Words to generate</span><b id="bigramLenVal">10</b></div><input type="range" id="bigramLen" min="3" max="25" step="1" value="10"></div>
+        <button class="action" id="bigramGenerateBtn">Generate</button>
+      </div>
+      <div class="trace-box" id="bigramGenerated" style="font-family:'IBM Plex Mono',monospace;"></div>
+
+      <div class="trace-title" style="margin-top:18px;">P(next word | seed word)</div>
+      <div class="table-scroll">
+        <table class="subnet-table"><thead><tr><th>Next word</th><th>Count</th><th>Probability</th></tr></thead><tbody id="bigramTableBody"></tbody></table>
+      </div>
+    </section>
+
 
     <!-- ===================== LINEAR REGRESSION + GD ===================== -->
     <section class="module" id="mod-linreg">
@@ -569,6 +680,62 @@
         <tbody id="subnetTableBody"></tbody>
       </table>
     </section>
+
+    <!-- ===================== ROUTING TABLES ===================== -->
+    <section class="module" id="mod-routing">
+      <h2 class="mod-title">Routing Tables</h2>
+      <div class="mod-desc">A router picks among every route whose network matches the destination, then applies <b>longest prefix match</b> — the most specific (highest-prefix) matching route wins, with metric as a tiebreaker. Edit the table or the destination and see which row wins.</div>
+
+      <div class="trace-title">Routing table (editable)</div>
+      <div id="routingTableWrap"></div>
+
+      <div class="field-row" style="margin-top:16px;">
+        <div class="field"><label for="routingDestInput">Destination IP</label><input type="text" id="routingDestInput"></div>
+        <button class="action" id="routingFindBtn">Find route</button>
+      </div>
+      <div class="fa-result" id="routingResultBox"></div>
+      <div class="note">Matching rows are shaded teal; the winning row is shaded red.</div>
+    </section>
+
+    <!-- ===================== DNS RESOLUTION ===================== -->
+    <section class="module" id="mod-dns">
+      <h2 class="mod-title">DNS Resolution</h2>
+      <div class="mod-desc">Turning a domain name into an IP address is a chain of referrals: your resolver asks a root server, which points to a TLD server, which points to the authoritative server that actually knows the answer. Step through it for any domain.</div>
+
+      <div class="field-row">
+        <div class="field"><label for="dnsDomain">Domain name</label><input type="text" id="dnsDomain"></div>
+        <button class="action" id="dnsRunBtn">Start resolution</button>
+      </div>
+
+      <div class="clock-flow" id="dnsFlow"></div>
+
+      <div class="trace-box">
+        <div id="dnsStepDesc" style="min-height:40px;"></div>
+        <div class="step-controls">
+          <button class="action ghost" id="dnsBack">&larr; back</button>
+          <span class="step-count" id="dnsStepCount">step 1 / 10</span>
+          <button class="action ghost" id="dnsFwd">forward &rarr;</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== OSI MODEL ===================== -->
+    <section class="module" id="mod-osi">
+      <h2 class="mod-title">The OSI Model</h2>
+      <div class="mod-desc">Seven layers, each responsible for one job and talking only to the layers directly above and below it. Click a layer for details, and see how data actually gets wrapped in headers as it travels down the stack (encapsulation).</div>
+
+      <div class="fa-columns">
+        <div id="osiList"></div>
+        <div id="osiDetail"></div>
+      </div>
+
+      <div class="trace-title" style="margin-top:24px;">Encapsulation — application data wrapped layer by layer</div>
+      <div class="trace-box" style="overflow-x:auto;">
+        <div id="osiEncap"></div>
+      </div>
+      <div class="note">Each layer only adds its own header (and, for Data Link, a trailer too) around whatever the layer above handed it — it never needs to understand what's inside.</div>
+    </section>
+
 
     <!-- ===================== EXPLORATORY DATA ANALYSIS ===================== -->
     <section class="module" id="mod-eda">
@@ -1366,6 +1533,10 @@
 <script defer src="assets/js/embedded-utils.js"></script>
 <script defer src="assets/js/levenshtein.js"></script>
 <script defer src="assets/js/ttr.js"></script>
+<script defer src="assets/js/ngram.js"></script>
+<script defer src="assets/js/cosine.js"></script>
+<script defer src="assets/js/tfidf.js"></script>
+<script defer src="assets/js/bigram.js"></script>
 <script defer src="assets/js/linreg.js"></script>
 <script defer src="assets/js/overfitting.js"></script>
 <script defer src="assets/js/knn.js"></script>
@@ -1374,6 +1545,9 @@
 <script defer src="assets/js/confusion-matrix.js"></script>
 <script defer src="assets/js/ipaddress.js"></script>
 <script defer src="assets/js/subnet.js"></script>
+<script defer src="assets/js/routing.js"></script>
+<script defer src="assets/js/dns.js"></script>
+<script defer src="assets/js/osi.js"></script>
 <script defer src="assets/js/eda.js"></script>
 <script defer src="assets/js/gpio.js"></script>
 <script defer src="assets/js/rcc.js"></script>

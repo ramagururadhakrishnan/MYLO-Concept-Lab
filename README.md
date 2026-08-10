@@ -18,6 +18,10 @@ groups get added.
 |---|---|---|
 | NLP | Levenshtein (edit) distance — step through insert / delete / substitute operations and see the DP grid with the optimal path highlighted | `assets/js/levenshtein.js` |
 | NLP | Type-Token Ratio (TTR) — lexical diversity, unique vs. repeated tokens | `assets/js/ttr.js` |
+| NLP | N-gram Overlap — Jaccard similarity and overlap coefficient between two texts' n-gram sets, shared n-grams highlighted | `assets/js/ngram.js` |
+| NLP | Cosine Similarity — term-frequency vectors, dot product, magnitudes, and the resulting similarity score | `assets/js/cosine.js` |
+| NLP | TF-IDF — editable small corpus, ranked term table (TF, DF, IDF, TF-IDF) for a selected document | `assets/js/tfidf.js` |
+| NLP | Tiny Bigram Language Model — builds real word-pair counts from training text, shows next-word probabilities, and generates text by sampling | `assets/js/bigram.js` |
 | ML | Linear Regression + Gradient Descent — a loss-surface heatmap with the descent path traced across it as the fit line updates | `assets/js/linreg.js` |
 | ML | Overfitting vs. Underfitting — adjustable polynomial degree, live train/test error curves | `assets/js/overfitting.js` |
 | ML | k-Nearest Neighbors — click to place a query point, adjustable k, shaded decision regions | `assets/js/knn.js` |
@@ -26,6 +30,9 @@ groups get added.
 | ML | Confusion Matrix, Precision/Recall/F1 — adjustable threshold over scored examples, live-updating matrix and metrics | `assets/js/confusion-matrix.js` |
 | Networks | IP Addressing — click any of the 32 bits to flip it, see class (A–E) and address type (private/loopback/link-local/etc.) update live | `assets/js/ipaddress.js` |
 | Networks | Subnetting — drag a CIDR prefix slider, see subnet mask, network/broadcast address, and usable host range recompute live | `assets/js/subnet.js` |
+| Networks | Routing Tables — editable table, longest-prefix-match lookup for a destination IP with matching/winning rows highlighted | `assets/js/routing.js` |
+| Networks | DNS Resolution — step-by-step recursive resolution walkthrough (root &rarr; TLD &rarr; authoritative) for any domain you type | `assets/js/dns.js` |
+| Networks | OSI Model — clickable 7-layer reference plus a nested-box encapsulation visual | `assets/js/osi.js` |
 | Data Science | Exploratory Data Analysis — upload a CSV/Excel file (or load the built-in sample) for column types, missing values, summary stats, distributions, and a correlation heatmap. Includes a chart-type picker (histogram, box plot, line, bar, pie, scatter) | `assets/js/eda.js` |
 | Embedded (STM32F4) | GPIO Registers — configure MODER/OTYPER/OSPEEDR/PUPDR/ODR/IDR for one pin, see each register's hex value and this pin's exact bits highlighted | `assets/js/gpio.js` |
 | Embedded (STM32F4) | RCC Clock Tree — HSE/HSI source, PLL M/N/P/Q, AHB/APB prescalers → live SYSCLK/HCLK/PCLK with over-frequency warnings | `assets/js/rcc.js` |
@@ -115,6 +122,10 @@ mylo-concept-lab/
 │   │   ├── network-utils.js      # shared IP/binary helpers (Networks modules)
 │   │   ├── levenshtein.js        # NLP — Levenshtein distance
 │   │   ├── ttr.js                # NLP — Type-Token Ratio
+│   │   ├── ngram.js              # NLP — N-gram Overlap
+│   │   ├── cosine.js             # NLP — Cosine Similarity
+│   │   ├── tfidf.js              # NLP — TF-IDF
+│   │   ├── bigram.js             # NLP — Tiny Bigram Language Model
 │   │   ├── linreg.js             # ML — Linear Regression + Gradient Descent
 │   │   ├── overfitting.js        # ML — Overfitting vs Underfitting
 │   │   ├── knn.js                # ML — k-Nearest Neighbors
@@ -123,6 +134,9 @@ mylo-concept-lab/
 │   │   ├── confusion-matrix.js   # ML — Confusion Matrix / Precision / Recall / F1
 │   │   ├── ipaddress.js          # Networks — IP Addressing
 │   │   ├── subnet.js             # Networks — Subnetting
+│   │   ├── routing.js            # Networks — Routing Tables
+│   │   ├── dns.js                # Networks — DNS Resolution
+│   │   ├── osi.js                # Networks — OSI Model
 │   │   ├── eda.js                # Data Science — Exploratory Data Analysis
 │   │   ├── embedded-utils.js     # shared hex/binary/bit-field helpers (Embedded modules)
 │   │   ├── gpio.js               # Embedded — GPIO Registers
