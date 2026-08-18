@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof initDNSModule === 'function') initDNSModule();
   if (typeof initOSIModule === 'function') initOSIModule();
   if (typeof initEDAModule === 'function') initEDAModule();
+  if (typeof initMVLabModule === 'function') initMVLabModule();
   if (typeof initGPIOModule === 'function') initGPIOModule();
   if (typeof initRCCModule === 'function') initRCCModule();
   if (typeof initTimerModule === 'function') initTimerModule();

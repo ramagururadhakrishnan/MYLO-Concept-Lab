@@ -28,6 +28,7 @@ groups get added.
 | ML | k-Means Clustering — step through assign/update phases or run to convergence, inertia chart | `assets/js/kmeans.js` |
 | ML | Decision Boundary (Logistic Regression) — gradient descent on cross-entropy loss, shaded decision regions, misclassified points ringed | `assets/js/decision-boundary.js` |
 | ML | Confusion Matrix, Precision/Recall/F1 — adjustable threshold over scored examples, live-updating matrix and metrics | `assets/js/confusion-matrix.js` |
+| ML | Multivariate Data Lab — upload a CSV/Excel dataset (or load the sample), pick feature/class columns, and get covariance matrix, eigenvalues/eigenvectors, PCA (scree + scatter), 2-class LDA, multiple linear regression, and logistic regression, all on your own data | `assets/js/mv-lab.js` |
 | Networks | IP Addressing — click any of the 32 bits to flip it, see class (A–E) and address type (private/loopback/link-local/etc.) update live | `assets/js/ipaddress.js` |
 | Networks | Subnetting — drag a CIDR prefix slider, see subnet mask, network/broadcast address, and usable host range recompute live | `assets/js/subnet.js` |
 | Networks | Routing Tables — editable table, longest-prefix-match lookup for a destination IP with matching/winning rows highlighted | `assets/js/routing.js` |
@@ -132,6 +133,8 @@ mylo-concept-lab/
 │   │   ├── kmeans.js             # ML — k-Means Clustering
 │   │   ├── decision-boundary.js  # ML — Decision Boundary / Logistic Regression
 │   │   ├── confusion-matrix.js   # ML — Confusion Matrix / Precision / Recall / F1
+│   │   ├── stat-utils.js         # shared linear algebra engine (covariance, Jacobi eigendecomposition, PCA, LDA, regression)
+│   │   ├── mv-lab.js             # ML — Multivariate Data Lab (PCA/LDA/regression on uploaded data)
 │   │   ├── ipaddress.js          # Networks — IP Addressing
 │   │   ├── subnet.js             # Networks — Subnetting
 │   │   ├── routing.js            # Networks — Routing Tables
